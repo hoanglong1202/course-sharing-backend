@@ -3,6 +3,9 @@ const config = require('./config');
 const cors = require('cors');
 const path = require('path');
 const routes = require('./routes');
+const httpStatus = require('http-status');
+const ApiError = require('./helper/ApiError');
+const { errorConverter, errorHandler } = require('./middlewares/error');
 
 const app = express();
 
@@ -17,3 +20,14 @@ app.use('/api', routes);
 app.listen(config.port, () => {
   console.log('App listening on port: ' + config.port )
 });
+
+// send back a 404 error for any unknown api request
+app.use((req, res, next) => {
+  next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
+});
+
+// convert error to ApiError, if needed
+app.use(errorConverter);
+
+// handle error
+app.use(errorHandler);

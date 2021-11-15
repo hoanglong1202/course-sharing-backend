@@ -20,7 +20,8 @@
     "joi": "^17.4.2",
     "moment": "^2.29.1",
     "mssql": "^7.2.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
