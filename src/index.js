@@ -3,6 +3,7 @@ const config = require('./config');
 const cors = require('cors');
 const path = require('path');
 const routes = require('./routes');
+const morgan = require("morgan")
 const httpStatus = require('http-status');
 const globalErrorHandler = require('./middlewares/globalErrorHandler');
 const ApiError = require('./helper/ApiError');
@@ -12,6 +13,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(morgan("combined"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));

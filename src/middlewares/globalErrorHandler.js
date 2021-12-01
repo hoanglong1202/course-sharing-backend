@@ -1,4 +1,4 @@
-const ApiError = require("../helper/errors").ApiError;
+const ApiError = require('../helper/errors').ApiError;
 
 const handleError = (err, req, res, next) => {
   console.error(err);
@@ -9,14 +9,14 @@ const handleError = (err, req, res, next) => {
       message: err.message,
     });
   }
-  if(err.code === 11000){
-    const value=err.message.match(/(["'])(\\?.)*?\1/)[0];
-    const message=`Duplicate field Value: ${value}`
+
+  if (err.code === 11000) {
+    const value = err.message.match(/(["'])(\\?.)*?\1/)[0];
+    const message = `Duplicate field Value: ${value}`;
     return res.status(400).json({
       success: false,
-      message
-    })
-
+      message,
+    });
   }
 
   // By default we send a status 500 if something goes wrong

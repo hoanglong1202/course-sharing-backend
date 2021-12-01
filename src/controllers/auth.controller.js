@@ -1,5 +1,7 @@
 const { AuthService, UserService } = require('../services');
 const { BadRequestError } = require('../helper/errors');
+const httpStatus = require('http-status');
+const ApiError = require('../helper/ApiError');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { generateJWT } = require('../services/utils');
@@ -9,7 +11,11 @@ const register = async (req, res, next) => {
   const isValidUsername = await UserService.findUserByEmail(email);
 
   if (isValidUsername) {
-    throw new BadRequestError('Username is already taken');
+    res.status(400).send({
+      success: false,
+      message: 'Username is already taken',
+    });
+    // throw new BadRequestError('Username is already taken');
   }
 
   const temp = req.body;
@@ -22,14 +28,22 @@ const register = async (req, res, next) => {
 
   await AuthService.register(user);
   const result = await UserService.findUserByEmail(email);
-  delete result.pass;
+  const mappingResult = {
+    id: result.id,
+    username: result.username,
+    email: result.email,
+    role: result.role,
+    profile_picture: result.profile_picture,
+    status: result.status,
+    user_types_id: result.user_types_id,
+  };
 
   const token = generateJWT({ username: result.username, role: result.role });
 
   res.status(200).send({
     success: true,
     message: 'Register successfullyy',
-    user: result,
+    user: mappingResult,
     token,
   });
 };
@@ -39,20 +53,25 @@ const signin = async (req, res, next) => {
   const isValidUser = await UserService.findUserByEmail(email);
 
   if (!isValidUser) {
-    // res.status(400).send({
-    //   success: false,
-    //   message: 'Account doesnt exist',
-    // });
-    throw new BadRequestError('Account doesnt exist');
+    res.status(400).send({
+      success: false,
+      message: 'Account doesnt exist',
+    });
+    // throw new BadRequestError('Account doesnt exist');
   }
 
-  await bcrypt.compare(password, isValidUser.pass, function (err, result) {
-    if (!result) {
-      throw new BadRequestError('Password is incorrect');
-    }
-  });
+  const isValidPassword = await bcrypt.compare(password, isValidUser.pass);
+
+  if (!isValidPassword) {
+    res.status(400).send({
+      success: false,
+      message: 'Password is incorrect',
+    });
+    // throw new BadRequestError('Password is incorrect');
+  }
 
   const user = {
+    id: isValidUser.id,
     username: isValidUser.username,
     email: isValidUser.email,
     role: isValidUser.role,
