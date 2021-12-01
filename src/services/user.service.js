@@ -1,12 +1,12 @@
 const config = require('../config');
 const sql = require('mssql');
 
-const findUserByUsername = async (username) => {
+const findUserByEmail = async (email) => {
   try {
     let pool = await sql.connect(config.sql);
     const result = await pool
       .request()
-      .query(`select user_name, firstname, lastname, profile_picture, status, user_types_id from tblUser where user_name = '${username}'`);
+      .query(`select email, username, pass, role, profile_picture, status, user_types_id from tblUser where email = '${email}'`);
     return result.recordset[0];
   } catch (error) {
     console.log(error.message);
@@ -14,5 +14,5 @@ const findUserByUsername = async (username) => {
 };
 
 module.exports = {
-  findUserByUsername,
+  findUserByEmail,
 };

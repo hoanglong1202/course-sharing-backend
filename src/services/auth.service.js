@@ -1,29 +1,31 @@
 const config = require('../config');
 const sql = require('mssql');
 
+
 const register = async (data) => {
   try {
     const { username, firstname, lastname, password } = data;
 
     let pool = await sql.connect(config.sql);
     const result = await pool.request().query(
-      `INSERT INTO tblUser (user_name, firstname, lastname, pass, user_types_id) 
-        VALUES ('${username}', N'${firstname}', N'${lastname}', '${password}', 1) `
+      `INSERT INTO tblUser (email, username, pass, user_types_id) 
+        VALUES ('${email}', N'${username}', N'${hashPasword}', 1) `
     );
-    return result.recordset;
+    return result.recordset[0];
   } catch (error) {
     console.log(error.message);
   }
 };
 
-const signin = async (username, password) => {
+const signin = async (email, password) => {
   try {
     let pool = await sql.connect(config.sql);
+
     const result = await pool.request().query(
-      `SELECT user_name, firstname, lastname, profile_picture, status, user_types_id
-      FROM tblUser WHERE user_name = '${username}' AND pass = '${password}'`
+      `SELECT email, username, role, profile_picture, status, user_types_id
+      FROM tblUser WHERE email = '${email}' AND pass = '${password}'`
     );
-    return result.recordset;
+    return result.recordset[0];
   } catch (error) {
     console.log(error.message);
   }
