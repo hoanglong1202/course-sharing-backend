@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { generateJWT } = require('../services/utils');
 
 const register = async (req, res, next) => {
-  const { email, username, password } = req.body;
+  const { email, password } = req.body;
   const isValidUsername = await UserService.findUserByEmail(email);
 
   if (isValidUsername) {
@@ -21,12 +21,16 @@ const register = async (req, res, next) => {
   };
 
   await AuthService.register(user);
-  const registerResult = await UserService.findUserByEmail(username);
+  const result = await UserService.findUserByEmail(email);
+  delete result.pass;
+
+  const token = generateJWT({ username: result.username, role: result.role });
 
   res.status(200).send({
     success: true,
-    message: 'Register successfully',
-    user: registerResult,
+    message: 'Register successfullyy',
+    user: result,
+    token,
   });
 };
 
@@ -35,6 +39,10 @@ const signin = async (req, res, next) => {
   const isValidUser = await UserService.findUserByEmail(email);
 
   if (!isValidUser) {
+    // res.status(400).send({
+    //   success: false,
+    //   message: 'Account doesnt exist',
+    // });
     throw new BadRequestError('Account doesnt exist');
   }
 
@@ -45,24 +53,20 @@ const signin = async (req, res, next) => {
   });
 
   const user = {
-    username: isValidUser?.username,
-    email: isValidUser?.email,
-    role: isValidUser?.role,
-    profile_picture: isValidUser?.profile_picture,
-    status: isValidUser?.status,
-    user_types_id: isValidUser?.user_types_id,
+    username: isValidUser.username,
+    email: isValidUser.email,
+    role: isValidUser.role,
+    profile_picture: isValidUser.profile_picture,
+    status: isValidUser.status,
+    user_types_id: isValidUser.user_types_id,
   };
 
   const token = generateJWT({ username: user.username, role: user.role });
 
-  console.log('test');
-  console.log(user?.username);
-  console.log(user?.role);
-
   res.status(200).send({
     success: true,
     message: 'Signin successfully',
-    user: user,
+    user,
     token,
   });
 };

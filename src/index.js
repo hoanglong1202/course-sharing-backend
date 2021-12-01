@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const routes = require('./routes');
 const httpStatus = require('http-status');
+const globalErrorHandler = require('./middlewares/globalErrorHandler');
 const ApiError = require('./helper/ApiError');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 
@@ -16,9 +17,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', routes);
+app.use(globalErrorHandler);
 
 app.listen(config.port, () => {
-  console.log('App listening on port: ' + config.port )
+  console.log('App listening on port: ' + config.port);
 });
 
 // send back a 404 error for any unknown api request
