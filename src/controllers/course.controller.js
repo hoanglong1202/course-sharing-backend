@@ -9,7 +9,12 @@ const getLandingPageCourses = async (req, res, next) => {
 
     const favouritedCourse = await CourseService.getMostFavouritedCourses();
     const viewedCourse = await CourseService.getMostViewedCourses();
-    const courses = await CourseService.getAllCourse(page, limit);
+    const { courses, total_course } = await CourseService.getAllCourse(
+      page,
+      limit
+    );
+
+    console.log('total_course', total_course);
 
     res.status(200).send({
       success: true,
@@ -19,6 +24,7 @@ const getLandingPageCourses = async (req, res, next) => {
         viewedCourse,
         courses,
       },
+      pagination: { page, limit, total: total_course },
     });
   } catch (error) {
     next(error);
@@ -30,16 +36,14 @@ const getCourse = async (req, res, next) => {
     const { id } = req.params;
 
     const course = await CourseService.getCourse(id);
-    if(!course) {
-      throw new NotFoundError('Course not found!')
+    if (!course) {
+      throw new NotFoundError('Course not found!');
     }
 
     res.status(200).send({
       success: true,
       message: 'Fetching data successfullyy',
-      dataObj: {
-        course,
-      },
+      dataObj: course,
     });
   } catch (error) {
     next(error);

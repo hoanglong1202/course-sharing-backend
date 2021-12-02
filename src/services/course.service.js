@@ -40,7 +40,15 @@ const getAllCourse = async (page, limit) => {
       FETCH NEXT ${limit} ROWS ONLY;
       `
     );
-    return result.recordset;
+
+    const total_course = await pool.request().query(
+      `SELECT COUNT(*) as total_course FROM tblCourses`
+    );
+
+    return {
+      courses: result.recordset,
+      total_course: total_course.recordset[0].total_course
+    };
   } catch (error) {
     console.log(error.message);
   }
