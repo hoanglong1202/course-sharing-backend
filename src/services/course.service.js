@@ -100,6 +100,23 @@ const getLessonList = async (courseId) => {
   }
 };
 
+const getLessonListDetail = async (courseId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const result = await pool.request().query(
+      `SELECT lesson_id as id, lesson_name
+      FROM tblLesson
+      WHERE course_id = ${courseId}
+      ORDER BY lesson_id ASC
+      `
+    );
+
+    return { total: result.recordset.length, firstLesson: result.recordset[0] };
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -107,4 +124,5 @@ module.exports = {
   getCourse,
   getLesson,
   getLessonList,
+  getLessonListDetail,
 };

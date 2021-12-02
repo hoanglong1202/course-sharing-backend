@@ -1,5 +1,6 @@
 const { CourseService } = require('../services');
 const { NotFoundError } = require('../helper/errors');
+const { Table } = require('mssql');
 
 const getLandingPageCourses = async (req, res, next) => {
   try {
@@ -40,10 +41,18 @@ const getCourse = async (req, res, next) => {
       throw new NotFoundError('Course not found!');
     }
 
+    const total = await CourseService.getLessonListDetail(id);
+
+    const result = {
+      ...course,
+      ...total,
+    };
+    console.log('total', total);
+
     res.status(200).send({
       success: true,
       message: 'Fetching data successfullyy',
-      dataObj: course,
+      dataObj: result,
     });
   } catch (error) {
     next(error);
@@ -57,8 +66,8 @@ const getLesson = async (req, res, next) => {
     const lesson = parseInt(lessonId) || null;
     const course = parseInt(courseId) || null;
 
-    console.log('lesson', lesson)
-    console.log('course', course)
+    console.log('lesson', lesson);
+    console.log('course', course);
 
     const result = await CourseService.getLesson(lesson, course);
     if (!result) {
