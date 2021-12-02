@@ -50,7 +50,55 @@ const getCourse = async (req, res, next) => {
   }
 };
 
+const getLesson = async (req, res, next) => {
+  try {
+    const { lessonId, courseId } = req.params;
+
+    const lesson = parseInt(lessonId) || null;
+    const course = parseInt(courseId) || null;
+
+    console.log('lesson', lesson)
+    console.log('course', course)
+
+    const result = await CourseService.getLesson(lesson, course);
+    if (!result) {
+      throw new NotFoundError('Lesson not found!');
+    }
+
+    res.status(200).send({
+      success: true,
+      message: 'Fetching data successfullyy',
+      dataObj: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getLessonList = async (req, res, next) => {
+  try {
+    const { courseId } = req.params;
+
+    const course = parseInt(courseId) || null;
+
+    const result = await CourseService.getLessonList(course);
+    if (!result) {
+      throw new NotFoundError('Lesson not found!');
+    }
+
+    res.status(200).send({
+      success: true,
+      message: 'Fetching data successfullyy',
+      dataObj: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
+  getLesson,
+  getLessonList,
 };

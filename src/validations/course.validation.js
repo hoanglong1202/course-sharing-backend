@@ -6,6 +6,21 @@ const getCourseDetail = {
   }),
 };
 
+const getLessonList = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+  }),
+};
+
+const getLessonDetail = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+    lessonId: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   getCourseDetail,
+  getLessonList,
+  getLessonDetail,
 };

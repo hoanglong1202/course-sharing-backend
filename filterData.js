@@ -1,0 +1,245 @@
+const data = [
+  {
+    "_id": "5b8a37d71a383514ba71601c",
+    "updatedAt": "2018-09-01T06:55:19.742Z",
+    "createdAt": "2018-09-01T06:55:19.742Z",
+    "title": "Bài 0 - Install git",
+    "description": "Hướng dẫn cài đặt git",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/0J2aou7Kj7s",
+    "order": 0,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a38371a383514ba71601d",
+    "updatedAt": "2018-09-01T06:56:55.931Z",
+    "createdAt": "2018-09-01T06:56:55.931Z",
+    "title": "Bài 1 - First \"commits\"",
+    "description": "Viết lệnh Commit đầu tiền",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/4yBEU-49DsQ",
+    "order": 1,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a38a81a383514ba71601e",
+    "updatedAt": "2018-09-01T06:58:48.517Z",
+    "createdAt": "2018-09-01T06:58:48.517Z",
+    "title": "Bài 2 - log, show, diff",
+    "description": "Một số lệnh hiển thị trạng thái",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/21pq_XD5A3c",
+    "order": 2,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a38d91a383514ba71601f",
+    "updatedAt": "2018-09-01T06:59:37.398Z",
+    "createdAt": "2018-09-01T06:59:37.398Z",
+    "title": "Bài 3 - Các thuật ngữ Working dir, Staging area, Repository",
+    "description": "Giới thiệu một số thuật ngữ phổ biến",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/GlN82zuFdAw",
+    "order": 3,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a39311a383514ba716020",
+    "updatedAt": "2018-09-01T07:40:29.834Z",
+    "createdAt": "2018-09-01T07:01:05.275Z",
+    "title": "Bài 4 - checkout, reset",
+    "description": "Huỷ các thay đổi sử dụng checkout hoặc reset",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/GNmzHP68DMg",
+    "order": 4,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a396e1a383514ba716021",
+    "updatedAt": "2018-09-01T07:41:24.131Z",
+    "createdAt": "2018-09-01T07:02:06.787Z",
+    "title": "Bài 5 - Branching & Merging",
+    "description": "Phân nhánh và ghép nhánh",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/2RHVNNbRZBU",
+    "order": 5,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a39b71a383514ba716022",
+    "updatedAt": "2018-09-01T07:42:02.273Z",
+    "createdAt": "2018-09-01T07:03:19.166Z",
+    "title": "Bài 6 - git reset",
+    "description": "\bHướng dẫn sử dụng git reset để huỷ commit đã tạo",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/8Xvd7uFUktk",
+    "order": 6,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3a7c1a383514ba716023",
+    "updatedAt": "2018-09-01T07:43:16.125Z",
+    "createdAt": "2018-09-01T07:06:36.176Z",
+    "title": "Bài 7 - Git revert",
+    "description": "Hướng dẫn sử dụng git revert để tạo 1 commit đảo ngược lại những thay đổi của 1 commit trong quá khứ",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/8qIu9riL8w8",
+    "order": 7,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3aaf1a383514ba716024",
+    "updatedAt": "2018-09-01T07:07:27.106Z",
+    "createdAt": "2018-09-01T07:07:27.106Z",
+    "title": "Bài 8 - .gitignore",
+    "description": "Tìm hiểu về file .gitignore",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/AvAZ5SF6sb4",
+    "order": 8,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3aff1a383514ba716025",
+    "updatedAt": "2018-09-01T07:45:19.384Z",
+    "createdAt": "2018-09-01T07:08:47.779Z",
+    "title": "Bài 9 - Github",
+    "description": "Giới thiệu về Github",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/0HCbZp2VUEY",
+    "order": 9,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3b361a383514ba716026",
+    "updatedAt": "2018-09-01T07:46:07.984Z",
+    "createdAt": "2018-09-01T07:09:42.289Z",
+    "title": "Bài 10 - Git credential",
+    "description": "Hướng dẫn dùng git credential để không phải nhập lại password nhiều lần",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/xb1TW5dKdfs",
+    "order": 10,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3b781a383514ba716027",
+    "updatedAt": "2018-09-01T07:47:07.727Z",
+    "createdAt": "2018-09-01T07:10:48.746Z",
+    "title": "Bài 11 - Git clone & pull",
+    "description": "Hướng dẫn sử dụng clone để tải source code từ github về máy lần đầu, pull để đồng bộ source code từ remote repo về local repo",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/3fglKU5f1Bk",
+    "order": 11,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3bce1a383514ba716028",
+    "updatedAt": "2018-09-01T07:47:33.384Z",
+    "createdAt": "2018-09-01T07:12:14.980Z",
+    "title": "Bài 12 - Push a branch",
+    "description": "Cách push một branch lên remote repo",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/2wAH_qWkJJo",
+    "order": 12,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3bff1a383514ba716029",
+    "updatedAt": "2018-09-01T07:47:56.664Z",
+    "createdAt": "2018-09-01T07:13:03.530Z",
+    "title": "Bài 13 - Pull request",
+    "description": "Hướng dẫn tạo pull request trên github",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/MVGgNteyflw",
+    "order": 13,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3c311a383514ba71602a",
+    "updatedAt": "2018-09-01T07:48:16.228Z",
+    "createdAt": "2018-09-01T07:13:53.085Z",
+    "title": "Bài 14 - Code review",
+    "description": "Giới thiệu về quy trình review code",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/N-Yszi4gN58",
+    "order": 14,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3c6b1a383514ba71602b",
+    "updatedAt": "2018-09-01T07:49:27.349Z",
+    "createdAt": "2018-09-01T07:14:51.007Z",
+    "title": "Bài 15 - Resolve conflict sử dụng rebase",
+    "description": "Hướng dẫn cách xử lý tình huống khi gặp conflict (xung đột giữa các commit)",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/kNe9C78TAf0",
+    "order": 15,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3cbc1a383514ba71602c",
+    "updatedAt": "2018-09-01T07:16:12.389Z",
+    "createdAt": "2018-09-01T07:16:12.389Z",
+    "title": "Bài 16 - Resolve conflict sử dụng merge",
+    "description": "Sử dụng merge trong Resolve conflict",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/K4kzvzZ7v08",
+    "order": 16,
+    "__v": 0,
+    "status": "completed"
+  },
+  {
+    "_id": "5b8a3d021a383514ba71602d",
+    "updatedAt": "2018-09-01T14:52:16.997Z",
+    "createdAt": "2018-09-01T07:17:22.423Z",
+    "title": "Bài 17 - Next steps",
+    "description": "Tổng kết khóa học - định hướng cho các khóa tiếp theo",
+    "course": "5b8a1d531a383514ba715fca",
+    "videoProvider": "youtube",
+    "videoUrl": "https://www.youtube.com/embed/m65U8OtF8xw",
+    "order": 17,
+    "__v": 0,
+    "status": "completed"
+  }
+]
+
+const filter = (data) => {
+  const result = data.map((item) => {
+    return `( N'${item.title}', N'${item.description}', N'${item.videoUrl}', 1202, 1)`;
+  });
+  return result;
+};
+
+console.log(filter(data));
