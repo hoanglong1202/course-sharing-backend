@@ -4,7 +4,7 @@ const { NotFoundError } = require('../helper/errors');
 const getLandingPageCourses = async (req, res, next) => {
   try {
     const { page: pageQuery, limit: limitQuery } = req.query;
-    const page = parseInt(pageQuery) || 0;
+    const page = parseInt(pageQuery) || 1;
     const limit = parseInt(limitQuery) || 6;
 
     const favouritedCourse = await CourseService.getMostFavouritedCourses();

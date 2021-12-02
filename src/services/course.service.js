@@ -36,7 +36,7 @@ const getAllCourse = async (page, limit) => {
       `SELECT course_id as id, course_name, description, detail, viewed, favourited, cover_picture
       FROM tblCourses
       ORDER BY id
-      OFFSET ${page * limit} ROWS 
+      OFFSET ${(page - 1) * limit} ROWS 
       FETCH NEXT ${limit} ROWS ONLY;
       `
     );
