@@ -56,7 +56,7 @@ const getCourse = async (id) => {
       WHERE course_id = ${id}
       `
     );
-    return result.recordset;
+    return result.recordset[0];
   } catch (error) {
     console.log(error.message);
   }
