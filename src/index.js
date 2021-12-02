@@ -8,12 +8,14 @@ const httpStatus = require('http-status');
 const globalErrorHandler = require('./middlewares/globalErrorHandler');
 const ApiError = require('./helper/ApiError');
 const { errorConverter, errorHandler } = require('./middlewares/error');
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
-app.use(express.json());
 app.use(cors());
 app.use(morgan("combined"));
+app.use(cookieParser());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
