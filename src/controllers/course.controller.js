@@ -90,15 +90,25 @@ const getLessonList = async (req, res, next) => {
 
     const course = parseInt(courseId) || null;
 
-    const result = await CourseService.getLessonList(course);
-    if (!result) {
-      throw new NotFoundError('Lesson not found!');
+    const { lessonList, creator, course: courseDetail } =
+      await CourseService.getLessonListDetail(course);
+    if (!lessonList) {
+      throw new NotFoundError('Lesson list not found!');
     }
+
+    const mappingData = lessonList.map((item) => {
+      return {
+        id: item.id,
+        lesson_name: item.lesson_name,
+      };
+    });
 
     res.status(200).send({
       success: true,
       message: 'Fetching data successfullyy',
-      dataObj: result,
+      dataObj: mappingData,
+      creator,
+      courseDetail,
     });
   } catch (error) {
     next(error);

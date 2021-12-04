@@ -85,33 +85,39 @@ const getLesson = async (lessonId, courseId) => {
   }
 };
 
-const getLessonList = async (courseId) => {
-  try {
-    let pool = await sql.connect(config.sql);
-    const result = await pool.request().query(
-      `SELECT lesson_id as id, lesson_name
-      FROM tblLesson
-      WHERE course_id = ${courseId}
-      `
-    );
-    return result.recordset;
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
 const getLessonListDetail = async (courseId) => {
   try {
     let pool = await sql.connect(config.sql);
     const result = await pool.request().query(
-      `SELECT lesson_id as id, lesson_name
-      FROM tblLesson
-      WHERE course_id = ${courseId}
-      ORDER BY lesson_id ASC
+      `SELECT L.lesson_id as id, L.lesson_name, C.course_id, C.course_name, C.description as course_description, CR.creator_id, CR.username, CR.description, CR.profile_picture
+      FROM tblLesson as L
+      JOIN tblCourses as C on C.course_id = L.course_id
+      JOIN tblCreator as CR on CR.creator_id = C.creator_id
+      WHERE L.course_id = ${courseId}
+      ORDER BY L.lesson_id ASC
       `
     );
 
-    return { total: result.recordset.length, firstLesson: result.recordset[0] };
+    const creator = {
+      creator_id: result.recordset[0].creator_id,
+      creator_name: result.recordset[0].username,
+      description: result.recordset[0].description,
+      profile_picture: result.recordset[0].profile_picture,
+    };
+
+    const course = {
+      course_id: result.recordset[0].course_id,
+      course_name: result.recordset[0].course_name,
+      description: result.recordset[0].course_description,
+    }
+
+    return {
+      lessonList: result.recordset,
+      total: result.recordset.length,
+      firstLesson: result.recordset[0],
+      creator,
+      course,
+    };
   } catch (error) {
     console.log(error.message);
   }
@@ -123,6 +129,5 @@ module.exports = {
   getAllCourse,
   getCourse,
   getLesson,
-  getLessonList,
   getLessonListDetail,
 };
