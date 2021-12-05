@@ -90,8 +90,11 @@ const getLessonList = async (req, res, next) => {
 
     const course = parseInt(courseId) || null;
 
-    const { lessonList, creator, course: courseDetail } =
-      await CourseService.getLessonListDetail(course);
+    const {
+      lessonList,
+      creator,
+      course: courseDetail,
+    } = await CourseService.getLessonListDetail(course);
     if (!lessonList) {
       throw new NotFoundError('Lesson list not found!');
     }
@@ -115,9 +118,27 @@ const getLessonList = async (req, res, next) => {
   }
 };
 
+const getLessonTypes = async (req, res, next) => {
+  try {
+    const result = await CourseService.getLessonTypes();
+    if (!result) {
+      throw new NotFoundError('Lesson types not found!');
+    }
+
+    res.status(200).send({
+      success: true,
+      message: 'Fetching data successfullyy',
+      dataObj: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
   getLesson,
   getLessonList,
+  getLessonTypes,
 };

@@ -109,7 +109,7 @@ const getLessonListDetail = async (courseId) => {
       course_id: result.recordset[0].course_id,
       course_name: result.recordset[0].course_name,
       description: result.recordset[0].course_description,
-    }
+    };
 
     return {
       lessonList: result.recordset,
@@ -123,6 +123,22 @@ const getLessonListDetail = async (courseId) => {
   }
 };
 
+const getLessonTypes = async () => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const result = await pool.request().query(
+      `SELECT L.lesson_types_id as id, L.lesson_types_name as name
+        FROM tblLessonTypes as L
+        ORDER BY L.lesson_types_id ASC
+        `
+    );
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -130,4 +146,5 @@ module.exports = {
   getCourse,
   getLesson,
   getLessonListDetail,
+  getLessonTypes,
 };
