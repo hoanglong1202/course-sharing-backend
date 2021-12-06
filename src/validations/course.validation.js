@@ -19,8 +19,15 @@ const getLessonDetail = {
   }),
 };
 
+const getCourseList = {
+  params: Joi.object().keys({
+    creatorId: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   getCourseDetail,
   getLessonList,
   getLessonDetail,
+  getCourseList,
 };

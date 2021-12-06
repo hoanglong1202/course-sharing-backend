@@ -139,6 +139,23 @@ const getLessonTypes = async () => {
   }
 };
 
+const getCourseList = async (id) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const result = await pool.request().query(
+      ` SELECT C.course_id as id, C.course_name, C.description, C.max_user, C.register_link, C.approved_date, C.viewed, C.favourited, C.cover_picture, C.creator_id, C.admin_id
+        FROM tblCourses as C
+        WHERE creator_id = '${id}'
+        ORDER BY C.course_id ASC
+        `
+    );
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -147,4 +164,5 @@ module.exports = {
   getLesson,
   getLessonListDetail,
   getLessonTypes,
+  getCourseList,
 };
