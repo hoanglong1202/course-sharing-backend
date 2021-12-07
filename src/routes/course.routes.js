@@ -7,7 +7,7 @@ const uploads = require('../middlewares/uploadFiles');
 const router = express.Router();
 
 const uploadCoverImage = uploads.fields([
-  { name: "cover_picture", maxCount: 1 },
+  { name: "profile_picture", maxCount: 1 },
 ]);
 
 router.get('/', CourseController.getLandingPageCourses);

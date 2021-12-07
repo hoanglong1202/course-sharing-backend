@@ -1,5 +1,5 @@
 const { CourseService } = require('../services');
-const { NotFoundError } = require('../helper/errors');
+const { NotFoundError, BadRequestError } = require('../helper/errors');
 const { Table } = require('mssql');
 
 const getLandingPageCourses = async (req, res, next) => {
@@ -153,13 +153,28 @@ const getCourseList = async (req, res, next) => {
 
 const addCourse = async (req, res, next) => {
   try {
-    console.log('test');
-    console.log('test', req.body);
-    console.log('test', req.files);
+    const { lesson } = req.body;
+    let data = { ...req.body };
+
+    // console.log('lesson', lesson)
+    // console.log('lesson type', typeof lesson)
+    // console.log('lesson parse type', typeof JSON.parse(lesson))
+
+    const parseLesson = JSON.parse(lesson);
+    data.lesson = parseLesson;
+
+    await CourseService.addCourse(data);
+    const result = await CourseService.getCourseByName(data.course_name);
+
+    if (!result) {
+      throw new BadRequestError('Cannot add course');
+    }
+
+    await CourseService.addLesson(result.id, data.lesson);
 
     res.status(200).send({
       success: true,
-      message: 'Add Course successfullyy',
+      message: 'Add Course successfullyy'
     });
   } catch (error) {
     next(error);

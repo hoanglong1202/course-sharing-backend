@@ -63,7 +63,7 @@ const getCourse = async (id) => {
               C.max_user, C.approved_date
       FROM tblCourses as C
       JOIN tblCreator as CR ON CR.creator_id = C.creator_id
-      WHERE course_id = ${id}
+      WHERE C.course_id = ${id}
       `
     );
     return result.recordset[0];
@@ -162,6 +162,61 @@ const getCourseList = async (id) => {
   }
 };
 
+const addCourse = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const { course_name, description, creator_id, cover_picture } = data;
+
+    const result = await pool.request()
+      .query(`INSERT INTO tblCourses (course_name, description, creator_id, cover_picture) 
+              VALUES ('${course_name}', N'${description}', ${parseInt(creator_id)}, '${cover_picture}')`);
+
+    return result.recordset;
+
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const addLesson = async (courseId, lesson) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    let temp = lesson;
+    console.log('lesson', typeof temp);
+    
+    let lessonArr = lesson.map(x => `(N'${x.lesson_name}', N'${x.description}', N'${x.content}', ${parseInt(x.lesson_types_id)}, ${parseInt(courseId)})`).join(",");
+    const insertLessonQuery = `INSERT INTO tblLesson (lesson_name, description, content, lesson_types_id, course_id) VALUES ${lessonArr}`;
+
+    // console.log('temp2',temp);
+    // console.log(lessonArr);
+    // console.log(insertLessonQuery);
+
+    const result = await pool.request().query(insertLessonQuery);
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const getCourseByName = async (courseName) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const result = await pool.request().query(
+      `SELECT C.course_id as id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
+              C.creator_id, CR.username as creator_name,  CR.profile_picture, CR.description as creator_description,
+              C.max_user, C.approved_date
+      FROM tblCourses as C
+      JOIN tblCreator as CR ON CR.creator_id = C.creator_id
+      WHERE C.course_name = N'${courseName}'
+      `
+    );
+    return result.recordset[0];
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -171,4 +226,7 @@ module.exports = {
   getLessonListDetail,
   getLessonTypes,
   getCourseList,
+  addCourse,
+  addLesson,
+  getCourseByName,
 };
