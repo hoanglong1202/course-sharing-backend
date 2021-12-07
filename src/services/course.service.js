@@ -58,7 +58,9 @@ const getCourse = async (id) => {
   try {
     let pool = await sql.connect(config.sql);
     const result = await pool.request().query(
-      `SELECT C.course_id as id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, C.creator_id, CR.username as creator_name,  CR.profile_picture, CR.description as creator_description
+      `SELECT C.course_id as id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
+              C.creator_id, CR.username as creator_name,  CR.profile_picture, CR.description as creator_description,
+              C.max_user, C.approved_date
       FROM tblCourses as C
       JOIN tblCreator as CR ON CR.creator_id = C.creator_id
       WHERE course_id = ${id}
@@ -89,8 +91,11 @@ const getLessonListDetail = async (courseId) => {
   try {
     let pool = await sql.connect(config.sql);
     const result = await pool.request().query(
-      `SELECT L.lesson_id as id, L.lesson_name, C.course_id, C.course_name, C.description as course_description, CR.creator_id, CR.username, CR.description, CR.profile_picture
+      `SELECT L.lesson_id as id, L.lesson_name, L.content, L.description, L.lesson_types_id, C.course_id, C.course_name, 
+              C.description as course_description, CR.creator_id, CR.username, CR.description, CR.profile_picture,
+              LT.lesson_types_name
       FROM tblLesson as L
+      JOIN tblLessonTypes as LT on LT.lesson_types_id = L.lesson_types_id
       JOIN tblCourses as C on C.course_id = L.course_id
       JOIN tblCreator as CR on CR.creator_id = C.creator_id
       WHERE L.course_id = ${courseId}

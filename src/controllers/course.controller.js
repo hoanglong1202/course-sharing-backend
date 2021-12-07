@@ -15,8 +15,6 @@ const getLandingPageCourses = async (req, res, next) => {
       limit
     );
 
-    console.log('total_course', total_course);
-
     res.status(200).send({
       success: true,
       message: 'Fetching data successfullyy',
@@ -153,6 +151,21 @@ const getCourseList = async (req, res, next) => {
   }
 };
 
+const addCourse = async (req, res, next) => {
+  try {
+    console.log('test');
+    console.log('test', req.body);
+    console.log('test', req.files);
+
+    res.status(200).send({
+      success: true,
+      message: 'Add Course successfullyy',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
@@ -160,4 +173,5 @@ module.exports = {
   getLessonList,
   getLessonTypes,
   getCourseList,
+  addCourse,
 };
