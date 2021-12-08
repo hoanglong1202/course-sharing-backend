@@ -18,6 +18,7 @@ router.get('/course-list/:creatorId', validate(CourseValidation.getCourseList), 
 router.get('/lesson/:courseId', validate(CourseValidation.getLessonList), CourseController.getLessonList);
 router.get('/lesson/:courseId/:lessonId', validate(CourseValidation.getLessonDetail), CourseController.getLesson);
 
-router.post('/add-course', uploadCoverImage,  CourseController.addCourse );
+router.post('/add-course', uploadCoverImage, validate(CourseValidation.addCourse), CourseController.addCourse);
+router.put('/update-course', uploadCoverImage, validate(CourseValidation.updateCourse), CourseController.updateCourse);
 
 module.exports = router;

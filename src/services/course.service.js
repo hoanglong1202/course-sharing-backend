@@ -165,11 +165,11 @@ const getCourseList = async (id) => {
 const addCourse = async (data) => {
   try {
     let pool = await sql.connect(config.sql);
-    const { course_name, description, creator_id, cover_picture } = data;
+    const { course_name, description, creator_id, cover_picture, max_user } = data;
 
     const result = await pool.request()
-      .query(`INSERT INTO tblCourses (course_name, description, creator_id, cover_picture) 
-              VALUES ('${course_name}', N'${description}', ${parseInt(creator_id)}, '${cover_picture}')`);
+      .query(`INSERT INTO tblCourses (course_name, description, creator_id, cover_picture, max_user) 
+              VALUES (N'${course_name}', N'${description}', ${parseInt(creator_id)}, '${cover_picture}', '${max_user}')`);
 
     return result.recordset;
 
@@ -187,10 +187,6 @@ const addLesson = async (courseId, lesson) => {
     
     let lessonArr = lesson.map(x => `(N'${x.lesson_name}', N'${x.description}', N'${x.content}', ${parseInt(x.lesson_types_id)}, ${parseInt(courseId)})`).join(",");
     const insertLessonQuery = `INSERT INTO tblLesson (lesson_name, description, content, lesson_types_id, course_id) VALUES ${lessonArr}`;
-
-    // console.log('temp2',temp);
-    // console.log(lessonArr);
-    // console.log(insertLessonQuery);
 
     const result = await pool.request().query(insertLessonQuery);
     return result.recordset;
@@ -217,6 +213,31 @@ const getCourseByName = async (courseName) => {
   }
 }
 
+const updateCourse = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const {
+      course_name,
+      description,
+      creator_id,
+      cover_picture,
+      id,
+      max_user,
+    } = data;
+
+    const query = `UPDATE tblCourses
+                  SET course_name = N'${course_name}', description = N'${description}', cover_picture = '${cover_picture}', max_user = ${max_user}
+                  WHERE course_id = ${parseInt(id)} AND creator_id = ${parseInt(creator_id)}`;
+    console.log('query', query);
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -229,4 +250,5 @@ module.exports = {
   addCourse,
   addLesson,
   getCourseByName,
+  updateCourse,
 };

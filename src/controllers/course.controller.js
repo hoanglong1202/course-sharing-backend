@@ -156,9 +156,11 @@ const addCourse = async (req, res, next) => {
     const { lesson } = req.body;
     let data = { ...req.body };
 
-    // console.log('lesson', lesson)
-    // console.log('lesson type', typeof lesson)
-    // console.log('lesson parse type', typeof JSON.parse(lesson))
+    const isCourseNameExist = await CourseService.getCourseByName(data.course_name);
+
+    if (isCourseNameExist) {
+      throw new BadRequestError('Course name already existed');
+    }
 
     const parseLesson = JSON.parse(lesson);
     data.lesson = parseLesson;
@@ -181,6 +183,21 @@ const addCourse = async (req, res, next) => {
   }
 };
 
+const updateCourse = async (req, res, next) => {
+  try {
+    let data = { ...req.body };
+
+    await CourseService.updateCourse(data);
+
+    res.status(200).send({
+      success: true,
+      message: 'Update Course successfullyy'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
@@ -189,4 +206,5 @@ module.exports = {
   getLessonTypes,
   getCourseList,
   addCourse,
+  updateCourse,
 };
