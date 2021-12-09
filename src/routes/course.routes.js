@@ -22,5 +22,6 @@ router.get('/lesson/:courseId/:lessonId', validate(CourseValidation.getLessonDet
 
 router.post('/add-course', uploadCoverImage, validate(CourseValidation.addCourse), CourseController.addCourse);
 router.put('/update-course', uploadCoverImage, validate(CourseValidation.updateCourse), CourseController.updateCourse);
+router.delete('/delete-course/:id', uploadCoverImage, validate(CourseValidation.deleteCourse), CourseController.deleteCourse);
 
 module.exports = router;

@@ -242,6 +242,26 @@ const searchCourse = async (req, res, next) => {
   }
 };
 
+const deleteCourse = async (req, res, next) => {
+  try {
+    let { id } = req.params;
+
+    const course = await CourseService.getCourse(id);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    await CourseService.deleteCourse(id, course.isDeleted);
+
+    res.status(200).send({
+      success: true,
+      message: 'Delete Course successfullyy'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
@@ -253,4 +273,5 @@ module.exports = {
   updateCourse,
   getCourseTypes,
   searchCourse,
+  deleteCourse,
 };

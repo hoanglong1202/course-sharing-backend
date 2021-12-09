@@ -7,6 +7,7 @@ const getMostFavouritedCourses = async () => {
     const result = await pool.request().query(
       `SELECT TOP(3) course_id as id, course_name, description, detail, viewed, favourited, cover_picture
       FROM tblCourses
+      WHERE isDeleted = 'false'
       ORDER BY favourited DESC`
     );
     return result.recordset;
@@ -21,6 +22,7 @@ const getMostViewedCourses = async () => {
     const result = await pool.request().query(
       `SELECT TOP(3) course_id as id, course_name, description, detail, viewed, favourited, cover_picture
       FROM tblCourses
+      WHERE isDeleted = 'false'
       ORDER BY viewed DESC`
     );
     return result.recordset;
@@ -37,6 +39,7 @@ const getAllCourse = async (page, limit) => {
               C.creator_id, CR.username as creator_name
       FROM tblCourses as C
       JOIN tblCreator as CR ON CR.creator_id = C.creator_id
+      WHERE C.isDeleted = 'false'
       GROUP BY C.course_id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
               C.creator_id, CR.username
       ORDER BY C.course_id DESC
@@ -64,7 +67,7 @@ const getCourse = async (id) => {
     const result = await pool.request().query(
       `SELECT C.course_id as id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
               C.creator_id, CR.username as creator_name,  CR.profile_picture, CR.description as creator_description,
-              C.max_user, C.approved_date
+              C.max_user, C.approved_date, C.types_id, C.isDeleted
       FROM tblCourses as C
       JOIN tblCreator as CR ON CR.creator_id = C.creator_id
       WHERE C.course_id = ${id}
@@ -82,7 +85,7 @@ const getLesson = async (lessonId, courseId) => {
     const result = await pool.request().query(
       `SELECT lesson_id as id, lesson_name, description, content, course_id, lesson_types_id as types
       FROM tblLesson
-      WHERE course_id = ${courseId} AND lesson_id = ${lessonId}
+      WHERE course_id = ${courseId} AND lesson_id = ${lessonId} AND isDeleted = 'false'
       `
     );
     return result.recordset[0];
@@ -169,7 +172,7 @@ const getCourseList = async (id) => {
     let pool = await sql.connect(config.sql);
     const result = await pool.request().query(
       ` SELECT C.course_id as id, C.course_name, C.description, C.max_user, C.register_link, 
-              C.approved_date, C.viewed, C.favourited, C.cover_picture, C.creator_id, C.admin_id
+              C.approved_date, C.viewed, C.favourited, C.cover_picture, C.creator_id, C.admin_id, C.isDeleted
         FROM tblCourses as C
         WHERE creator_id = '${id}'
         ORDER BY C.course_id ASC
@@ -185,11 +188,11 @@ const getCourseList = async (id) => {
 const addCourse = async (data) => {
   try {
     let pool = await sql.connect(config.sql);
-    const { course_name, description, creator_id, cover_picture, max_user } = data;
+    const { course_name, description, creator_id, cover_picture, max_user, types_id } = data;
 
     const result = await pool.request()
-      .query(`INSERT INTO tblCourses (course_name, description, creator_id, cover_picture, max_user) 
-              VALUES (N'${course_name}', N'${description}', ${parseInt(creator_id)}, '${cover_picture}', '${max_user}')`);
+      .query(`INSERT INTO tblCourses (course_name, description, creator_id, cover_picture, max_user, types_id) 
+              VALUES (N'${course_name}', N'${description}', ${parseInt(creator_id)}, '${cover_picture}', '${max_user}', ${parseInt(types_id)})`);
 
     return result.recordset;
 
@@ -243,10 +246,11 @@ const updateCourse = async (data) => {
       cover_picture,
       id,
       max_user,
+      types_id,
     } = data;
 
     const query = `UPDATE tblCourses
-                  SET course_name = N'${course_name}', description = N'${description}', cover_picture = '${cover_picture}', max_user = ${max_user}
+                  SET course_name = N'${course_name}', description = N'${description}', cover_picture = '${cover_picture}', max_user = ${max_user}, types_id = ${parseInt(types_id)}
                   WHERE course_id = ${parseInt(id)} AND creator_id = ${parseInt(creator_id)}`;
 
     const result = await pool.request().query(query);
@@ -272,8 +276,7 @@ const searchCourse = async (data) => {
               C.creator_id, CR.username as creator_name
       FROM tblCourses as C
       JOIN tblCreator as CR ON CR.creator_id = C.creator_id
-      JOIN tblCourseTypes as CT ON CT.course_id = C.course_id
-      JOIN tblTypes as T ON T.types_id = CT.types_id
+      JOIN tblTypes as T ON T.types_id = C.types_id
       WHERE C.course_name LIKE N'%${courseName}%' AND T.types_name LIKE N'%${courseType}%' AND CR.username LIKE N'%${creatorName}%'
       GROUP BY C.course_id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
               C.creator_id, CR.username
@@ -286,6 +289,23 @@ const searchCourse = async (data) => {
     console.log(error.message);
   }
 };
+
+const deleteCourse = async (id, isDeleted) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const status = isDeleted === 'true' ? 'false' : 'true';
+    const query = `UPDATE tblCourses
+                  SET isDeleted = N'${status}'
+                  WHERE course_id = ${parseInt(id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
 
 module.exports = {
   getMostFavouritedCourses,
@@ -302,4 +322,5 @@ module.exports = {
   updateCourse,
   getCourseTypes,
   searchCourse,
+  deleteCourse,
 };

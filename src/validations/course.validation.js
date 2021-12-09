@@ -34,6 +34,7 @@ const addCourse = {
     creator_id: Joi.any().required(),
     max_user: Joi.any().required(),
     profile_picture: Joi.any().required(),
+    types_id: Joi.any().required(),
   }),
 };
 
@@ -46,6 +47,13 @@ const updateCourse = {
     max_user: Joi.any().required(),
     profile_picture: Joi.any().required(),
     id: Joi.any().required(),
+    types_id: Joi.any().required(),
+  }),
+};
+
+const deleteCourse = {
+  params: Joi.object().keys({
+    id: Joi.string().required(),
   }),
 };
 
@@ -56,4 +64,5 @@ module.exports = {
   getCourseList,
   addCourse,
   updateCourse,
+  deleteCourse,
 };
