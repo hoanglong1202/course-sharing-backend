@@ -17,7 +17,7 @@ const getLandingPageCourses = async (req, res, next) => {
 
     res.status(200).send({
       success: true,
-      message: 'Fetching data successfullyy',
+      message: 'Fetching data successfully',
       dataObj: {
         favouritedCourse,
         viewedCourse,
@@ -133,6 +133,23 @@ const getLessonTypes = async (req, res, next) => {
   }
 };
 
+const getCourseTypes = async (req, res, next) => {
+  try {
+    const result = await CourseService.getCourseTypes();
+    if (!result) {
+      throw new NotFoundError('Course types not found!');
+    }
+
+    res.status(200).send({
+      success: true,
+      message: 'Fetching data successfully',
+      dataObj: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getCourseList = async (req, res, next) => {
   try {
     const { creatorId } = req.params;
@@ -198,6 +215,34 @@ const updateCourse = async (req, res, next) => {
   }
 };
 
+const searchCourse = async (req, res, next) => {
+  try {
+    let courseName = req?.query?.courseName || '';
+    let courseType = req?.query?.courseType || '';
+    let creatorName = req?.query?.creatorName || '';
+    let orderBy = req?.query?.orderBy || 'ASC';
+
+    const result = await CourseService.searchCourse({
+      courseName,
+      courseType,
+      creatorName,
+      orderBy,
+    });
+
+    if (!result) {
+      throw new NotFoundError('Course not found');
+    }
+
+    res.status(200).send({
+      success: true,
+      message: 'Update Course successfullyy',
+      dataObj: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
@@ -207,4 +252,6 @@ module.exports = {
   getCourseList,
   addCourse,
   updateCourse,
+  getCourseTypes,
+  searchCourse,
 };

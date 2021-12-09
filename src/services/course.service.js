@@ -33,9 +33,13 @@ const getAllCourse = async (page, limit) => {
   try {
     let pool = await sql.connect(config.sql);
     const result = await pool.request().query(
-      `SELECT course_id as id, course_name, description, detail, viewed, favourited, cover_picture
-      FROM tblCourses
-      ORDER BY id
+      `SELECT C.course_id as id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
+              C.creator_id, CR.username as creator_name
+      FROM tblCourses as C
+      JOIN tblCreator as CR ON CR.creator_id = C.creator_id
+      GROUP BY C.course_id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
+              C.creator_id, CR.username
+      ORDER BY C.course_id DESC
       OFFSET ${(page - 1) * limit} ROWS 
       FETCH NEXT ${limit} ROWS ONLY;
       `
@@ -144,6 +148,22 @@ const getLessonTypes = async () => {
   }
 };
 
+const getCourseTypes = async () => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const result = await pool.request().query(
+      `SELECT L.types_id as id, L.types_name as name
+        FROM tblTypes as L
+        ORDER BY L.types_id ASC
+        `
+    );
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 const getCourseList = async (id) => {
   try {
     let pool = await sql.connect(config.sql);
@@ -228,7 +248,36 @@ const updateCourse = async (data) => {
     const query = `UPDATE tblCourses
                   SET course_name = N'${course_name}', description = N'${description}', cover_picture = '${cover_picture}', max_user = ${max_user}
                   WHERE course_id = ${parseInt(id)} AND creator_id = ${parseInt(creator_id)}`;
-    console.log('query', query);
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const searchCourse = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const {
+      courseName,
+      courseType,
+      creatorName,
+      orderBy
+    } = data;
+
+    const query = `
+      SELECT C.course_id as id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
+              C.creator_id, CR.username as creator_name
+      FROM tblCourses as C
+      JOIN tblCreator as CR ON CR.creator_id = C.creator_id
+      JOIN tblCourseTypes as CT ON CT.course_id = C.course_id
+      JOIN tblTypes as T ON T.types_id = CT.types_id
+      WHERE C.course_name LIKE N'%${courseName}%' AND T.types_name LIKE N'%${courseType}%' AND CR.username LIKE N'%${creatorName}%'
+      GROUP BY C.course_id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
+              C.creator_id, CR.username
+      ORDER BY C.course_id ${orderBy || 'DESC'}`;
 
     const result = await pool.request().query(query);
 
@@ -251,4 +300,6 @@ module.exports = {
   addLesson,
   getCourseByName,
   updateCourse,
+  getCourseTypes,
+  searchCourse,
 };
