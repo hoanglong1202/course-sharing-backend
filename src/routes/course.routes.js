@@ -11,12 +11,12 @@ const uploadCoverImage = uploads.fields([
 ]);
 
 router.get('/', CourseController.getLandingPageCourses);
-router.get('/lesson/types', CourseController.getLessonTypes);
 router.get('/types', CourseController.getCourseTypes);
 router.get('/search', CourseController.searchCourse);
-
-router.get('/:id', validate(CourseValidation.getCourseDetail), CourseController.getCourse);
 router.get('/course-list/:creatorId', validate(CourseValidation.getCourseList), CourseController.getCourseList);
+router.get('/:id', validate(CourseValidation.getCourseDetail), CourseController.getCourse);
+
+router.get('/lesson/types', CourseController.getLessonTypes);
 router.get('/lesson/:courseId', validate(CourseValidation.getLessonList), CourseController.getLessonList);
 router.get('/lesson/:courseId/:lessonId', validate(CourseValidation.getLessonDetail), CourseController.getLesson);
 

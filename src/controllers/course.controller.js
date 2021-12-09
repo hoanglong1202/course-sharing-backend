@@ -1,6 +1,5 @@
 const { CourseService } = require('../services');
 const { NotFoundError, BadRequestError } = require('../helper/errors');
-const { Table } = require('mssql');
 
 const getLandingPageCourses = async (req, res, next) => {
   try {
@@ -217,10 +216,10 @@ const updateCourse = async (req, res, next) => {
 
 const searchCourse = async (req, res, next) => {
   try {
-    let courseName = req?.query?.courseName || '';
-    let courseType = req?.query?.courseType || '';
-    let creatorName = req?.query?.creatorName || '';
-    let orderBy = req?.query?.orderBy || 'ASC';
+    let courseName = req.query.courseName || '';
+    let courseType = req.query.courseType || '';
+    let creatorName = req.query.creatorName || '';
+    let orderBy = req.query.orderBy || 'ASC';
 
     const result = await CourseService.searchCourse({
       courseName,
@@ -230,7 +229,7 @@ const searchCourse = async (req, res, next) => {
     });
 
     if (!result) {
-      throw new NotFoundError('Course not found');
+      throw new NotFoundError('Course type not found');
     }
 
     res.status(200).send({
