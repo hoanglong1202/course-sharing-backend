@@ -19,6 +19,8 @@ router.get('/:id', validate(CourseValidation.getCourseDetail), CourseController.
 router.get('/lesson/types', CourseController.getLessonTypes);
 router.get('/lesson/:courseId', validate(CourseValidation.getLessonList), CourseController.getLessonList);
 router.get('/lesson/:courseId/:lessonId', validate(CourseValidation.getLessonDetail), CourseController.getLesson);
+router.put('/lesson/:courseId/:lessonId', validate(CourseValidation.updateLesson), CourseController.updateLesson);
+router.delete('/lesson/:courseId/:lessonId', validate(CourseValidation.deleteLesson), CourseController.deleteLesson);
 
 router.post('/add-course', uploadCoverImage, validate(CourseValidation.addCourse), CourseController.addCourse);
 router.put('/update-course', uploadCoverImage, validate(CourseValidation.updateCourse), CourseController.updateCourse);

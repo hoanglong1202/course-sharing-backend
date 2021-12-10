@@ -83,9 +83,9 @@ const getLesson = async (lessonId, courseId) => {
   try {
     let pool = await sql.connect(config.sql);
     const result = await pool.request().query(
-      `SELECT lesson_id as id, lesson_name, description, content, course_id, lesson_types_id as types
+      `SELECT lesson_id as id, lesson_name, description, content, course_id, lesson_types_id as types, isDeleted
       FROM tblLesson
-      WHERE course_id = ${courseId} AND lesson_id = ${lessonId} AND isDeleted = 'false'
+      WHERE course_id = ${courseId} AND lesson_id = ${lessonId}
       `
     );
     return result.recordset[0];
@@ -100,7 +100,7 @@ const getLessonListDetail = async (courseId) => {
     const result = await pool.request().query(
       `SELECT L.lesson_id as id, L.lesson_name, L.content, L.description, L.lesson_types_id, C.course_id, C.course_name, 
               C.description as course_description, CR.creator_id, CR.username, CR.description, CR.profile_picture,
-              LT.lesson_types_name
+              LT.lesson_types_name, L.isDeleted
       FROM tblLesson as L
       JOIN tblLessonTypes as LT on LT.lesson_types_id = L.lesson_types_id
       JOIN tblCourses as C on C.course_id = L.course_id
@@ -307,6 +307,42 @@ const deleteCourse = async (id, isDeleted) => {
   }
 }
 
+const deleteLesson = async (courseId, lessonId, isDeleted) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const status = isDeleted === 'true' ? 'false' : 'true';
+    const query = `UPDATE tblLesson
+                  SET isDeleted = N'${status}'
+                  WHERE course_id = ${parseInt(courseId)} AND lesson_id = ${parseInt(lessonId)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const updateLesson = async (courseId, lessonId, data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const { lesson_name, description, content, lesson_types_id } = data;
+
+    const query = `UPDATE tblLesson
+                  SET lesson_name = N'${lesson_name}', description = N'${description}', 
+                      content = N'${content}', lesson_types_id = ${parseInt(lesson_types_id)}
+                  WHERE course_id = ${parseInt(courseId)} AND lesson_id = ${parseInt(lessonId)}`;
+    console.log(query)
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -323,4 +359,6 @@ module.exports = {
   getCourseTypes,
   searchCourse,
   deleteCourse,
+  deleteLesson,
+  updateLesson,
 };

@@ -63,9 +63,6 @@ const getLesson = async (req, res, next) => {
     const lesson = parseInt(lessonId) || null;
     const course = parseInt(courseId) || null;
 
-    console.log('lesson', lesson);
-    console.log('course', course);
-
     const result = await CourseService.getLesson(lesson, course);
     if (!result) {
       throw new NotFoundError('Lesson not found!');
@@ -262,6 +259,52 @@ const deleteCourse = async (req, res, next) => {
   }
 };
 
+const deleteLesson = async (req, res, next) => {
+  try {
+    const { lessonId, courseId } = req.params;
+
+    const lesson = parseInt(lessonId) || null;
+    const course = parseInt(courseId) || null;
+
+    const result = await CourseService.getLesson(lesson, course);
+    if (!result) {
+      throw new NotFoundError('Lesson not found!');
+    }
+
+    await CourseService.deleteLesson(course, lesson, result.isDeleted);
+
+    res.status(200).send({
+      success: true,
+      message: 'Delete Lesson successfullyy'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateLesson = async (req, res, next) => {
+  try {
+    const { lessonId, courseId } = req.params;
+
+    const lesson = parseInt(lessonId) || null;
+    const course = parseInt(courseId) || null;
+
+    const result = await CourseService.getLesson(lesson, course);
+    if (!result) {
+      throw new NotFoundError('Lesson not found!');
+    }
+
+    await CourseService.updateLesson(course, lesson, req.body);
+
+    res.status(200).send({
+      success: true,
+      message: 'Update Lesson successfullyy'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
@@ -274,4 +317,6 @@ module.exports = {
   getCourseTypes,
   searchCourse,
   deleteCourse,
+  deleteLesson,
+  updateLesson,
 };

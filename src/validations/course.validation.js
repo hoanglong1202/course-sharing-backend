@@ -57,6 +57,26 @@ const deleteCourse = {
   }),
 };
 
+const deleteLesson = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+    lessonId: Joi.string().required(),
+  }),
+};
+
+const updateLesson = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+    lessonId: Joi.string().required(),
+  }),
+  body: Joi.object().keys({
+    lesson_name: Joi.string().required(),
+    description: Joi.string().required(),
+    content: Joi.string().required(),
+    lesson_types_id: Joi.any().required(),
+  }),
+};
+
 module.exports = {
   getCourseDetail,
   getLessonList,
@@ -65,4 +85,6 @@ module.exports = {
   addCourse,
   updateCourse,
   deleteCourse,
+  deleteLesson,
+  updateLesson,
 };
