@@ -12,8 +12,22 @@ const getCreatorName = async () => {
 
     return result.recordset;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
-module.exports = { getCreatorName };
+const findCreatorByEmail = async (email) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const result = await pool
+      .request()
+      .query(
+        `select creator_id as id, email, username, description, pass, role, profile_picture from tblCreator where email = '${email}'`
+      );
+    return result.recordset[0];
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+module.exports = { getCreatorName, findCreatorByEmail };

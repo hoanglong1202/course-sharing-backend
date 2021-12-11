@@ -1,4 +1,9 @@
-const { AuthService, UserService } = require('../services');
+const {
+  AuthService,
+  UserService,
+  CreatorService,
+  AdminService,
+} = require('../services');
 const { BadRequestError } = require('../helper/errors');
 const bcrypt = require('bcrypt');
 const { generateJWT } = require('../services/utils');
@@ -11,7 +16,7 @@ const register = async (req, res, next) => {
     if (isValidUsername) {
       res.status(400).send({
         success: false,
-        message: 'Username is already taken',
+        message: 'Email is already taken',
       });
       // throw new BadRequestError('Username is already taken');
     }
@@ -36,7 +41,11 @@ const register = async (req, res, next) => {
       user_types_id: result.user_types_id,
     };
 
-    const token = generateJWT({ username: result.username, role: result.role });
+    const token = generateJWT({
+      id: result.id,
+      email: result.email,
+      role: result.role,
+    });
 
     res.status(200).send({
       success: true,
@@ -53,36 +62,71 @@ const signin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const isValidUser = await UserService.findUserByEmail(email);
+    const isValidCreator = await CreatorService.findCreatorByEmail(email);
+    const isValidAdmin = await AdminService.findAdminByEmail(email);
 
-    if (!isValidUser) {
-      res.status(400).send({
-        success: false,
-        message: 'Account doesnt exist',
-      });
-      // throw new BadRequestError('Account doesnt exist');
+    if (!isValidUser && !isValidCreator && !isValidAdmin) {
+      throw new BadRequestError('Account doesnt exist');
     }
 
-    const isValidPassword = await bcrypt.compare(password, isValidUser.pass);
+    let user = {};
 
-    if (!isValidPassword) {
-      res.status(400).send({
-        success: false,
-        message: 'Password is incorrect',
-      });
-      // throw new BadRequestError('Password is incorrect');
+    if (isValidUser && !isValidCreator && !isValidAdmin) {
+      const isValidPassword = await bcrypt.compare(password, isValidUser.pass);
+
+      if (!isValidPassword) {
+        throw new BadRequestError('Password is incorrect');
+      }
+
+      user = {
+        id: isValidUser.id,
+        username: isValidUser.username,
+        email: isValidUser.email,
+        role: isValidUser.role,
+        profile_picture: isValidUser.profile_picture,
+        status: isValidUser.status,
+        user_types_id: isValidUser.user_types_id,
+      };
     }
 
-    const user = {
-      id: isValidUser.id,
-      username: isValidUser.username,
-      email: isValidUser.email,
-      role: isValidUser.role,
-      profile_picture: isValidUser.profile_picture,
-      status: isValidUser.status,
-      user_types_id: isValidUser.user_types_id,
-    };
+    if (!isValidUser && isValidCreator && !isValidAdmin) {
+      const isValidPassword = await bcrypt.compare(password, isValidCreator.pass);
 
-    const token = generateJWT({ username: user.username, role: user.role });
+      if (!isValidPassword) {
+        throw new BadRequestError('Password is incorrect');
+      }
+
+      user = {
+        id: isValidCreator.id,
+        username: isValidCreator.username,
+        email: isValidCreator.email,
+        role: isValidCreator.role,
+        profile_picture: isValidCreator.profile_picture,
+        description: isValidCreator.description,
+      };
+    }
+
+    if (!isValidUser && !isValidCreator && isValidAdmin) {
+      const isValidPassword = await bcrypt.compare(password, isValidAdmin.pass);
+
+      if (!isValidPassword) {
+        throw new BadRequestError('Password is incorrect');
+      }
+
+      user = {
+        id: isValidAdmin.id,
+        username: isValidAdmin.username,
+        email: isValidAdmin.email,
+        role: isValidAdmin.role,
+        profile_picture: isValidAdmin.profile_picture,
+      };
+    }
+
+    const token = generateJWT({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    });
 
     res.status(200).send({
       success: true,

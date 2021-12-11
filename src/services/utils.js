@@ -26,7 +26,14 @@ const generateJWT = (data) => {
   return token;
 };
 
+const veiryJWT = (token) => {
+  const data = jwt.verify(token, process.env.SECRET_JWT_KEY);
+
+  return data;
+};
+
 module.exports = {
   loadSqlQueries,
-  generateJWT
+  generateJWT,
+  veiryJWT
 };
