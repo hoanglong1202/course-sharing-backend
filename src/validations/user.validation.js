@@ -1,14 +1,19 @@
 const Joi = require('joi');
 
-const updateCreator = {
+const getUser = {
+  params: Joi.object().keys({
+    id: Joi.string().required(),
+  }),
+};
+
+const updateUser = {
   body: Joi.object().keys({
-    creator_id: Joi.any().required(),
+    user_id: Joi.any().required(),
     email: Joi.string().required(),
-    description: Joi.string().required(),
     username: Joi.string().required(),
     profile_picture: Joi.string().required(),
     cover_picture: Joi.any(),
   }),
 };
 
-module.exports = { updateCreator };
+module.exports = { getUser, updateUser };

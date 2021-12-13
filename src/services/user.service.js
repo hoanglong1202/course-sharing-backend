@@ -57,9 +57,26 @@ const removeUser = async (id, status) => {
   }
 };
 
+const updateUser = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const { user_id, email, username, profile_picture } = data;
+
+    const query = `UPDATE tblUser SET email = N'${email}', username = N'${username}', profile_picture = N'${profile_picture}' WHERE user_id = ${parseInt(user_id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   findUserByEmail,
   getUserList,
   removeUser,
   findUserById,
+  updateUser,
 };

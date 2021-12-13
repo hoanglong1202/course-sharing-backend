@@ -33,7 +33,7 @@ const addCourse = {
     lesson: Joi.string().required(),
     creator_id: Joi.any().required(),
     max_user: Joi.any().required(),
-    profile_picture: Joi.any().required(),
+    profile_picture: Joi.any(),
     types_id: Joi.any().required(),
   }),
 };
@@ -45,7 +45,7 @@ const updateCourse = {
     cover_picture: Joi.string().required(),
     creator_id: Joi.any().required(),
     max_user: Joi.any().required(),
-    profile_picture: Joi.any().required(),
+    profile_picture: Joi.any(),
     id: Joi.any().required(),
     types_id: Joi.any().required(),
   }),

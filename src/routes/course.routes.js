@@ -25,6 +25,6 @@ router.delete('/lesson/:courseId/:lessonId', CreatorAuthenciation, validate(Cour
 
 router.post('/add-course', CreatorAuthenciation, uploadCoverImage, validate(CourseValidation.addCourse), CourseController.addCourse);
 router.put('/update-course', CreatorAuthenciation, uploadCoverImage, validate(CourseValidation.updateCourse), CourseController.updateCourse);
-router.delete('/delete-course/:id', CreatorAuthenciation, uploadCoverImage, validate(CourseValidation.deleteCourse), CourseController.deleteCourse);
+router.delete('/delete-course/:id', CreatorAuthenciation, validate(CourseValidation.deleteCourse), CourseController.deleteCourse);
 
 module.exports = router;

@@ -76,4 +76,28 @@ const removeCreator = async (id, status) => {
   }
 };
 
-module.exports = { getCreatorName, findCreatorByEmail, getCreatorList, removeCreator, findCreatorById };
+
+const updateCreator = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const { creator_id, email, username, profile_picture, description } = data;
+
+    const query = `UPDATE tblUser SET email = N'${email}', description = N'${description}', username = N'${username}', profile_picture = N'${profile_picture}' WHERE user_id = ${parseInt(creator_id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  getCreatorName,
+  findCreatorByEmail,
+  getCreatorList,
+  removeCreator,
+  findCreatorById,
+  updateCreator,
+};
