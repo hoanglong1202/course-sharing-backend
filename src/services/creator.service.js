@@ -31,11 +31,25 @@ const findCreatorByEmail = async (email) => {
   }
 };
 
+const findCreatorById = async (id) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const result = await pool
+      .request()
+      .query(
+        `select creator_id as id, email, username, description, pass, role, profile_picture, status from tblCreator where creator_id = '${id}'`
+      );
+    return result.recordset[0];
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 const getCreatorList = async () => {
   try {
     let pool = await sql.connect(config.sql);
     const result = await pool.request().query(
-      `SELECT creator_id as id, username as name, status, role
+      `SELECT creator_id as id, username as name, status, role, email
       FROM tblCreator
       ORDER BY creator_id DESC`
     );
@@ -46,4 +60,20 @@ const getCreatorList = async () => {
   }
 };
 
-module.exports = { getCreatorName, findCreatorByEmail, getCreatorList };
+const removeCreator = async (id, status) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const updateStatus = status === 'Hoạt động' ? 'Bị khóa' : 'Hoạt động';
+
+    const query = `UPDATE tblCreator SET status = N'${updateStatus}' WHERE creator_id = ${parseInt(id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { getCreatorName, findCreatorByEmail, getCreatorList, removeCreator, findCreatorById };

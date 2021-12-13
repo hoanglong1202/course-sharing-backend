@@ -9,12 +9,17 @@ const showUserList = async (req, res, next) => {
     const totalActiveUser = userList.filter(item => item.status === 'Hoạt động').length;
     const totalActiveCreator = creatorList.filter(item => item.status === 'Hoạt động').length;
 
+    const totalInactiveUser = userList.filter(item => item.status === 'Bị khóa').length;
+    const totalinactiveCreator = creatorList.filter(item => item.status === 'Bị khóa').length;
+
     res.status(200).send({
       success: true,
       message: 'Fetching data successfullyy',
       dataObj: {
         totalActiveUser,
         totalActiveCreator,
+        totalInactiveUser,
+        totalinactiveCreator,
         userList,
         creatorList,
       },
@@ -24,4 +29,44 @@ const showUserList = async (req, res, next) => {
   }
 };
 
-module.exports = { showUserList };
+const removeUser = async (req, res, next) => {
+  try {
+    let { id } = req.params;
+
+    const user = await UserService.findUserById(id);
+    if (!user) {
+      throw new NotFoundError('User not found!');
+    }
+
+    await UserService.removeUser(id, user.status);
+
+    res.status(200).send({
+      success: true,
+      message: 'Delete User successfullyy'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeCreator = async (req, res, next) => {
+  try {
+    let { id } = req.params;
+
+    const creator = await CreatorService.findCreatorById(id);
+    if (!creator) {
+      throw new NotFoundError('Creator not found!');
+    }
+
+    await CreatorService.removeCreator(id, creator.status);
+
+    res.status(200).send({
+      success: true,
+      message: 'Delete Creator successfullyy'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { showUserList, removeUser, removeCreator };
