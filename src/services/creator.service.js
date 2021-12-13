@@ -30,4 +30,18 @@ const findCreatorByEmail = async (email) => {
   }
 };
 
-module.exports = { getCreatorName, findCreatorByEmail };
+const countActiveCreator = async () => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const result = await pool
+      .request()
+      .query(
+        `select COUNT(*) as total from tblCreator where status = N'Hoạt động'`
+      );
+    return result.recordset[0];
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+module.exports = { getCreatorName, findCreatorByEmail, countActiveCreator };
