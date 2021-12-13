@@ -44,7 +44,6 @@ const getCourse = async (req, res, next) => {
       ...course,
       ...total,
     };
-    console.log('total', total);
 
     res.status(200).send({
       success: true,

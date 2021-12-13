@@ -7,6 +7,7 @@ const getCreatorName = async () => {
     const result = await pool.request().query(
       `SELECT creator_id as id, username as name
       FROM tblCreator
+      WHERE status = N'Hoạt động'
       ORDER BY creator_id DESC`
     );
 
@@ -30,18 +31,19 @@ const findCreatorByEmail = async (email) => {
   }
 };
 
-const countActiveCreator = async () => {
+const getCreatorList = async () => {
   try {
     let pool = await sql.connect(config.sql);
-    const result = await pool
-      .request()
-      .query(
-        `select COUNT(*) as total from tblCreator where status = N'Hoạt động'`
-      );
-    return result.recordset[0];
+    const result = await pool.request().query(
+      `SELECT creator_id as id, username as name, status, role
+      FROM tblCreator
+      ORDER BY creator_id DESC`
+    );
+
+    return result.recordset;
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
 };
 
-module.exports = { getCreatorName, findCreatorByEmail, countActiveCreator };
+module.exports = { getCreatorName, findCreatorByEmail, getCreatorList };

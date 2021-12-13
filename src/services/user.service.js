@@ -13,20 +13,22 @@ const findUserByEmail = async (email) => {
   }
 };
 
-
-const countActiveUser = async () => {
+const getUserList = async () => {
   try {
     let pool = await sql.connect(config.sql);
-    const result = await pool
-      .request()
-      .query(`select COUNT(*) as total from tblUser where status = N'Hoạt động'`);
-    return result.recordset[0];
+    const result = await pool.request().query(
+      `SELECT user_id as id, username as name, status, role
+      FROM tblUser
+      ORDER BY user_id DESC`
+    );
+
+    return result.recordset;
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
 };
 
 module.exports = {
   findUserByEmail,
-  countActiveUser,
+  getUserList,
 };

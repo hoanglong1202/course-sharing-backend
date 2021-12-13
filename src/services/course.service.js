@@ -206,7 +206,6 @@ const addLesson = async (courseId, lesson) => {
     let pool = await sql.connect(config.sql);
 
     let temp = lesson;
-    console.log('lesson', typeof temp);
     
     let lessonArr = lesson.map(x => `(N'${x.lesson_name}', N'${x.description}', N'${x.content}', ${parseInt(x.lesson_types_id)}, ${parseInt(courseId)})`).join(",");
     const insertLessonQuery = `INSERT INTO tblLesson (lesson_name, description, content, lesson_types_id, course_id) VALUES ${lessonArr}`;
@@ -333,7 +332,6 @@ const updateLesson = async (courseId, lessonId, data) => {
                   SET lesson_name = N'${lesson_name}', description = N'${description}', 
                       content = N'${content}', lesson_types_id = ${parseInt(lesson_types_id)}
                   WHERE course_id = ${parseInt(courseId)} AND lesson_id = ${parseInt(lessonId)}`;
-    console.log(query)
 
     const result = await pool.request().query(query);
 
