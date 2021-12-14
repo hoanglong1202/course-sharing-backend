@@ -12,8 +12,11 @@ const uploadCoverImage = uploads.fields([
 ]);
 
 router.get('/', AdminAuthenciation, AdminController.showUserList);
+router.get('/course-list', AdminAuthenciation, AdminController.getAdminCourseList);
+
 router.delete('/delete-creator/:id', AdminAuthenciation, validate(AdminValidation.removeCreator), AdminController.removeCreator);
 router.delete('/delete-user/:id', AdminAuthenciation, validate(AdminValidation.removeUser), AdminController.removeUser);
 router.post('/add-creator', uploadCoverImage, AdminAuthenciation, validate(AdminValidation.addCreator), AdminController.addCreator);
+router.put('/approved-course/:id', AdminAuthenciation, validate(AdminValidation.approvedCourse), AdminController.approveCourse);
 
 module.exports = router;

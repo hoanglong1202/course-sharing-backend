@@ -23,4 +23,10 @@ const addCreator = {
   }),
 };
 
-module.exports = { removeUser, removeCreator, addCreator };
+const approvedCourse = {
+  params: Joi.object().keys({
+    id: Joi.string().required(),
+  }),
+};
+
+module.exports = { removeUser, removeCreator, addCreator, approvedCourse };

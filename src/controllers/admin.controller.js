@@ -1,4 +1,4 @@
-const { UserService, CreatorService, AdminService } = require('../services');
+const { UserService, CreatorService, AdminService, CourseService } = require('../services');
 const { NotFoundError, BadRequestError } = require('../helper/errors');
 const bcrypt = require('bcrypt');
 
@@ -98,4 +98,41 @@ const addCreator = async (req, res, next) => {
   }
 };
 
-module.exports = { showUserList, removeUser, removeCreator, addCreator };
+const getAdminCourseList = async (req, res, next) => {
+  try {
+
+    const course = await CourseService.getAdminCourseList();
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    res.status(200).send({
+      success: true,
+      message: 'Fetching data successfullyy',
+      dataObj: course,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+const approveCourse = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const course = await CourseService.getCourse(id);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    await CourseService.approveCourse(id);
+
+    res.status(200).send({
+      success: true,
+      message: 'Approve Course successfullyy',
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { showUserList, removeUser, removeCreator, addCreator, getAdminCourseList, approveCourse };

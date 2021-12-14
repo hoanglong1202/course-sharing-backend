@@ -7,7 +7,7 @@ const getMostFavouritedCourses = async () => {
     const result = await pool.request().query(
       `SELECT TOP(3) course_id as id, course_name, description, detail, viewed, favourited, cover_picture
       FROM tblCourses
-      WHERE isDeleted = 'false'
+      WHERE isDeleted = 'false' AND isApproved = 'true'
       ORDER BY favourited DESC`
     );
     return result.recordset;
@@ -22,7 +22,7 @@ const getMostViewedCourses = async () => {
     const result = await pool.request().query(
       `SELECT TOP(3) course_id as id, course_name, description, detail, viewed, favourited, cover_picture
       FROM tblCourses
-      WHERE isDeleted = 'false'
+      WHERE isDeleted = 'false' AND isApproved = 'true'
       ORDER BY viewed DESC`
     );
     return result.recordset;
@@ -39,7 +39,7 @@ const getAllCourse = async (page, limit) => {
               C.creator_id, CR.username as creator_name
       FROM tblCourses as C
       JOIN tblCreator as CR ON CR.creator_id = C.creator_id
-      WHERE C.isDeleted = 'false'
+      WHERE C.isDeleted = 'false' AND C.isApproved = 'true'
       GROUP BY C.course_id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
               C.creator_id, CR.username
       ORDER BY C.course_id DESC
@@ -341,6 +341,43 @@ const updateLesson = async (courseId, lessonId, data) => {
   }
 }
 
+const getAdminCourseList = async () => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const result = await pool.request().query(
+      `SELECT C.course_id as id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
+              C.creator_id, CR.username as creator_name, C.isDeleted, C.isApproved, C.approved_date
+      FROM tblCourses as C
+      JOIN tblCreator as CR ON CR.creator_id = C.creator_id
+      ORDER BY C.course_id DESC
+      `
+    );
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const approveCourse = async (id) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    let currentDate = new Date();
+    let dateString = currentDate.toISOString();
+
+    const query = `UPDATE tblCourses
+                  SET isApproved = N'true', approved_date = N'${dateString}'
+                  WHERE course_id = ${parseInt(id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -359,4 +396,6 @@ module.exports = {
   deleteCourse,
   deleteLesson,
   updateLesson,
+  getAdminCourseList,
+  approveCourse,
 };
