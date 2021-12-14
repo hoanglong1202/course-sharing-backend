@@ -29,4 +29,31 @@ const approvedCourse = {
   }),
 };
 
-module.exports = { removeUser, removeCreator, addCreator, approvedCourse };
+const removeCourseType = {
+  params: Joi.object().keys({
+    id: Joi.string().required(),
+  }),
+};
+
+const addCourseType = {
+  body: Joi.object().keys({
+    name: Joi.string().required(),
+  }),
+};
+
+const updateCourseType = {
+  body: Joi.object().keys({
+    id: Joi.any().required(),
+    name: Joi.string().required(),
+  }),
+};
+
+module.exports = {
+  removeUser,
+  removeCreator,
+  addCreator,
+  approvedCourse,
+  removeCourseType,
+  addCourseType,
+  updateCourseType,
+};

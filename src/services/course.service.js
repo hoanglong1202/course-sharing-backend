@@ -155,9 +155,10 @@ const getCourseTypes = async () => {
   try {
     let pool = await sql.connect(config.sql);
     const result = await pool.request().query(
-      `SELECT L.types_id as id, L.types_name as name
+      `SELECT L.types_id as id, L.types_name as name, L.isDeleted, COUNT(*) as total
         FROM tblTypes as L
-        ORDER BY L.types_id ASC
+        GROUP BY L.types_id, L.types_name, L.isDeleted
+        ORDER BY L.types_id DESC
         `
     );
 
@@ -378,6 +379,88 @@ const approveCourse = async (id) => {
   }
 }
 
+const getCourseTypeById = async (id) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `SELECT * from tblTypes
+                  WHERE types_id = ${parseInt(id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset[0];
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const getCourseTypeByName = async (name) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `SELECT * from tblTypes
+                  WHERE types_name = N'${name}'`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset[0];
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const deleteCourseType = async (id, isDeleted) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const status = isDeleted === 'true' ? 'false' : 'true';
+    const query = `UPDATE tblTypes
+                  SET isDeleted = N'${status}'
+                  WHERE types_id = ${parseInt(id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const updateCourseType = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const { id, name } = data;
+
+    const query = `UPDATE tblTypes
+                  SET types_name = N'${name}'
+                  WHERE types_id = ${parseInt(id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const addCourseType = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const { name } = data;
+
+    const query = `INSERT INTO tblTypes (types_name)
+                  VALUES (N'${name}')`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -398,4 +481,9 @@ module.exports = {
   updateLesson,
   getAdminCourseList,
   approveCourse,
+  deleteCourseType,
+  updateCourseType,
+  addCourseType,
+  getCourseTypeById,
+  getCourseTypeByName,
 };

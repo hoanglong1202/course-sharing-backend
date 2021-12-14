@@ -19,4 +19,9 @@ router.delete('/delete-user/:id', AdminAuthenciation, validate(AdminValidation.r
 router.post('/add-creator', uploadCoverImage, AdminAuthenciation, validate(AdminValidation.addCreator), AdminController.addCreator);
 router.put('/approved-course/:id', AdminAuthenciation, validate(AdminValidation.approvedCourse), AdminController.approveCourse);
 
+// ========================= Course Type ===============================
+router.delete('/delete-course-type/:id', AdminAuthenciation, validate(AdminValidation.removeCourseType), AdminController.removeCourseType);
+router.post('/add-course-type', AdminAuthenciation, validate(AdminValidation.addCourseType), AdminController.addCourseType);
+router.put('/update-course-type', AdminAuthenciation, validate(AdminValidation.updateCourseType), AdminController.updateCourseType);
+
 module.exports = router;

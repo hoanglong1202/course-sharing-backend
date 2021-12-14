@@ -135,4 +135,71 @@ const approveCourse = async (req, res, next) => {
   }
 }
 
-module.exports = { showUserList, removeUser, removeCreator, addCreator, getAdminCourseList, approveCourse };
+const addCourseType = async (req, res, next) => {
+  try {
+    const { name } = req.body;
+    const type = await CourseService.getCourseTypeByName(name);
+    if (type) {
+      throw new NotFoundError('Course type is existed!');
+    }
+
+    await CourseService.addCourseType(req.body);
+
+    res.status(200).send({
+      success: true,
+      message: 'Add Course Type successfullyy',
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+const removeCourseType = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const type = await CourseService.getCourseTypeById(id);
+    if (!type) {
+      throw new NotFoundError('Types not found!');
+    }
+
+    await CourseService.deleteCourseType(id, type.isDeleted);
+
+    res.status(200).send({
+      success: true,
+      message: 'Delete Course Type successfullyy',
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+const updateCourseType = async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    const type = await CourseService.getCourseTypeById(id);
+    if (!type) {
+      throw new NotFoundError('Types not found!');
+    }
+
+    await CourseService.updateCourseType(req.body);
+
+    res.status(200).send({
+      success: true,
+      message: 'Update Course Type successfullyy',
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = {
+  showUserList,
+  removeUser,
+  removeCreator,
+  addCreator,
+  getAdminCourseList,
+  approveCourse,
+  addCourseType,
+  removeCourseType,
+  updateCourseType,
+};
