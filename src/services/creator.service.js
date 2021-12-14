@@ -76,7 +76,6 @@ const removeCreator = async (id, status) => {
   }
 };
 
-
 const updateCreator = async (data) => {
   try {
     let pool = await sql.connect(config.sql);
@@ -93,6 +92,22 @@ const updateCreator = async (data) => {
   }
 };
 
+const addCreator = async (data) => {
+  try {
+    const { username, email, description, password, profile_picture } = data;
+
+    let pool = await sql.connect(config.sql);
+    const picture = profile_picture ? profile_picture : null;
+    const result = await pool.request().query(
+      `INSERT INTO tblCreator (email, username, pass, description, profile_picture) 
+        VALUES ('${email}', N'${username}', N'${password}', N'${description}', N'${picture}') `
+    );
+    return result.recordset[0];
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   getCreatorName,
   findCreatorByEmail,
@@ -100,4 +115,5 @@ module.exports = {
   removeCreator,
   findCreatorById,
   updateCreator,
+  addCreator,
 };

@@ -4,12 +4,14 @@ const sql = require('mssql');
 
 const register = async (data) => {
   try {
-    const { username, email, password } = data;
+    const { username, email, password, profile_picture } = data;
 
     let pool = await sql.connect(config.sql);
+    const picture = profile_picture ? profile_picture : null;
+
     const result = await pool.request().query(
-      `INSERT INTO tblUser (email, username, pass, user_types_id) 
-        VALUES ('${email}', N'${username}', N'${password}', 1) `
+      `INSERT INTO tblUser (email, username, pass, user_types_id, profile_picture) 
+        VALUES ('${email}', N'${username}', N'${password}', 1, N'${picture}') `
     );
     return result.recordset[0];
   } catch (error) {

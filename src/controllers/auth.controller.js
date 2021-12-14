@@ -14,11 +14,7 @@ const register = async (req, res, next) => {
     const isValidUsername = await UserService.findUserByEmail(email);
 
     if (isValidUsername) {
-      res.status(400).send({
-        success: false,
-        message: 'Email is already taken',
-      });
-      // throw new BadRequestError('Username is already taken');
+      throw new BadRequestError('Username is already taken');
     }
 
     const temp = req.body;

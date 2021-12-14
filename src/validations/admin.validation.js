@@ -12,4 +12,15 @@ const removeCreator = {
   }),
 };
 
-module.exports = { removeUser, removeCreator };
+const addCreator = {
+  body: Joi.object().keys({
+    email: Joi.string().required(),
+    description: Joi.string().required(),
+    username: Joi.string().required(),
+    password: Joi.string().required(),
+    profile_picture: Joi.string().required(),
+    cover_picture: Joi.any(),
+  }),
+};
+
+module.exports = { removeUser, removeCreator, addCreator };

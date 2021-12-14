@@ -1,5 +1,6 @@
 const { UserService, CreatorService, AdminService } = require('../services');
 const { NotFoundError, BadRequestError } = require('../helper/errors');
+const bcrypt = require('bcrypt');
 
 const showUserList = async (req, res, next) => {
   try {
@@ -69,4 +70,32 @@ const removeCreator = async (req, res, next) => {
   }
 };
 
-module.exports = { showUserList, removeUser, removeCreator };
+const addCreator = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const isValidUsername = await CreatorService.findCreatorByEmail(email);
+
+    if (isValidUsername) {
+      throw new BadRequestError('Username is already taken');
+    }
+
+    const temp = req.body;
+    delete temp.password;
+
+    const creator = {
+      ...temp,
+      password: await bcrypt.hash(password, 10),
+    };
+
+    await CreatorService.addCreator(creator);
+
+    res.status(200).send({
+      success: true,
+      message: 'Add Creator successfullyy',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { showUserList, removeUser, removeCreator, addCreator };
