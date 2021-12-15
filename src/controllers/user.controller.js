@@ -1,4 +1,4 @@
-const { UserService } = require('../services');
+const { UserService, CourseService } = require('../services');
 const { NotFoundError, BadRequestError } = require('../helper/errors');
 
 const getUser = async (req, res, next) => {
@@ -41,4 +41,79 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-module.exports = { getUser, updateUser };
+const addUserFavourite = async (req, res, next) => {
+  try {
+    const { courseId, userId } = req.params;
+
+    const user = await UserService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundError('User not found!');
+    }
+
+    const course = await CourseService.getCourse(courseId);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    const favourited = parseInt(course.favourited) + 1;
+    await UserService.addUserFavourite(courseId, userId);
+    await CourseService.updateCourseFavourite(courseId, favourited);
+ 
+    res.status(200).send({
+      success: true,
+      message: 'Add User Favourite successfullyy',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeUserFavourite = async (req, res, next) => {
+  try {
+    const { courseId, userId } = req.params;
+
+    const user = await UserService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundError('User not found!');
+    }
+
+    const course = await CourseService.getCourse(courseId);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    const favourited = parseInt(course.favourited) - 1;
+    await UserService.removeUserFavourite(courseId, userId);
+    await CourseService.updateCourseFavourite(courseId, favourited);
+ 
+    res.status(200).send({
+      success: true,
+      message: 'Remove User Favourite successfullyy',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserFavourite = async (req, res, next) => {
+  try {
+    const { courseId, userId } = req.params;
+
+    const course = await CourseService.getCourse(courseId);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    const result = await UserService.getUserFavourite(courseId, userId);
+ 
+    res.status(200).send({
+      success: true,
+      message: 'Get User Favourite successfullyy',
+      dataObj: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getUser, updateUser, addUserFavourite, getUserFavourite, removeUserFavourite };

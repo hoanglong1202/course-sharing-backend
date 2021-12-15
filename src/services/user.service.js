@@ -73,10 +73,60 @@ const updateUser = async (data) => {
   }
 };
 
+const addUserFavourite = async (courseId, userId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString();
+
+    const query = `INSERT INTO tblUserFavourite (course_id, user_id, timestamp)
+                  VALUES (${courseId}, ${userId}, N'${currentDateString}')`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const removeUserFavourite = async (courseId, userId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `DELETE FROM tblUserFavourite WHERE course_id = ${parseInt(courseId)} AND user_id = ${parseInt(userId)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getUserFavourite = async (courseId, userId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `SELECT course_id as courseId, user_id as userId, timestamp from tblUserFavourite 
+                  WHERE course_id = ${parseInt(courseId)} AND user_id = ${parseInt(userId)}`
+
+    const result = await pool.request().query(query);
+
+    return result.recordset[0];
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   findUserByEmail,
   getUserList,
   removeUser,
   findUserById,
   updateUser,
+  addUserFavourite,
+  getUserFavourite,
+  removeUserFavourite,
 };

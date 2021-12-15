@@ -77,6 +77,27 @@ const updateLesson = {
   }),
 };
 
+const countCourseViewed = {
+  params: Joi.object().keys({
+    id: Joi.string().required(),
+  }),
+};
+
+const getCourseRating = {
+  params: Joi.object().keys({
+    id: Joi.string().required(),
+  }),
+};
+
+const addCourseRating = {
+  body: Joi.object().keys({
+    courseId: Joi.any().required(),
+    userId: Joi.any().required(),
+    content: Joi.string().required(),
+    point: Joi.any().required(),
+  }),
+};
+
 module.exports = {
   getCourseDetail,
   getLessonList,
@@ -87,4 +108,7 @@ module.exports = {
   deleteCourse,
   deleteLesson,
   updateLesson,
+  countCourseViewed,
+  getCourseRating,
+  addCourseRating,
 };

@@ -16,4 +16,25 @@ const updateUser = {
   }),
 };
 
-module.exports = { getUser, updateUser };
+const addUserFavourite = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+    userId: Joi.string().required(),
+  }),
+};
+
+const removeUserFavourite = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+    userId: Joi.string().required(),
+  }),
+};
+
+const getUserFavourite = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+    userId: Joi.string().required(),
+  }),
+};
+
+module.exports = { getUser, updateUser, addUserFavourite, getUserFavourite, removeUserFavourite };

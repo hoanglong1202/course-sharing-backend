@@ -1,4 +1,4 @@
-const { CourseService } = require('../services');
+const { CourseService, UserService } = require('../services');
 const { NotFoundError, BadRequestError } = require('../helper/errors');
 
 const getLandingPageCourses = async (req, res, next) => {
@@ -304,6 +304,75 @@ const updateLesson = async (req, res, next) => {
   }
 };
 
+const countCourseViewed = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const course = await CourseService.getCourse(id);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    await CourseService.countCourseViewed(id, course.viewed);
+
+    res.status(200).send({
+      success: true,
+      message: 'Update Course viewed successfullyy'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getCourseRating = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const course = await CourseService.getCourse(id);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    const result = await CourseService.getCourseRating(id);
+    if (!result) {
+      throw new NotFoundError('Not found!');
+    }
+
+    res.status(200).send({
+      success: true,
+      message: 'Fetching data successfullyy',
+      dataObj: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const addCourseRating = async (req, res, next) => {
+  try {
+    const { courseId, userId } = req.body;
+
+    const course = await CourseService.getCourse(courseId);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    const user = await UserService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundError('User not found!');
+    }
+
+    await CourseService.addCourseRating(req.body);
+
+    res.status(200).send({
+      success: true,
+      message: 'Fetching data successfullyy'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
@@ -318,4 +387,7 @@ module.exports = {
   deleteCourse,
   deleteLesson,
   updateLesson,
+  countCourseViewed,
+  getCourseRating,
+  addCourseRating,
 };

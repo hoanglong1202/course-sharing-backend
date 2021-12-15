@@ -13,5 +13,8 @@ const uploadCoverImage = uploads.fields([
 
 router.get('/:id', validate(UserValidation.getUser), UserController.getUser);
 router.put('/update-profile', UserAuthenciation, uploadCoverImage, validate(UserValidation.updateUser), UserController.updateUser);
+router.get('/user-favourite/:courseId/:userId', UserAuthenciation, validate(UserValidation.getUserFavourite), UserController.getUserFavourite);
+router.get('/add-user-favourite/:courseId/:userId', UserAuthenciation, validate(UserValidation.addUserFavourite), UserController.addUserFavourite);
+router.delete('/user-favourite/:courseId/:userId', UserAuthenciation, validate(UserValidation.removeUserFavourite), UserController.removeUserFavourite);
 
 module.exports = router;

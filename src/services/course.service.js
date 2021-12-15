@@ -461,6 +461,78 @@ const addCourseType = async (data) => {
   }
 }
 
+const countCourseViewed = async (id, view) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const coutnViewed = parseInt(view) + 1;
+    const query = `UPDATE tblCourses
+                  SET viewed = ${coutnViewed}
+                  WHERE course_id = ${parseInt(id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const updateCourseFavourite = async (id, favourited) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `UPDATE tblCourses
+                  SET favourited = ${favourited}
+                  WHERE course_id = ${parseInt(id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const getCourseRating = async (id) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `SELECT R.user_id as id, U.username, R.content, R.point, R.timestamp
+                  FROM tblRating as R
+                  JOIN tblUser as U on U.user_id = R.user_id
+                  JOIN tblCourses As C on C.course_id = R.course_id
+                  WHERE C.course_id = ${parseInt(id)}
+                  ORDER BY R.timestamp DESC`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const addCourseRating = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const { courseId, userId, content, point } = data;
+
+    let currentDate = new Date();
+    let dateString = currentDate.toISOString();
+
+    const query = `INSERT INTO tblRating (course_id, user_id, content, point, timestamp)
+                  VALUES (${parseInt(courseId)}, ${parseInt(userId)}, N'${content}', ${parseFloat(point)}, N'${dateString}')`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -486,4 +558,8 @@ module.exports = {
   addCourseType,
   getCourseTypeById,
   getCourseTypeByName,
+  countCourseViewed,
+  updateCourseFavourite,
+  getCourseRating,
+  addCourseRating,
 };
