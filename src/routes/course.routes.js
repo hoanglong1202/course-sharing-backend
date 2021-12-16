@@ -22,16 +22,19 @@ router.get('/search', CourseController.searchCourse);
 router.get('/course-list/:creatorId', CreatorAuthenciation, validate(CourseValidation.getCourseList), CourseController.getCourseList);
 router.get('/:id', validate(CourseValidation.getCourseDetail), CourseController.getCourse);
 router.get('/count-view/:id', validate(CourseValidation.countCourseViewed), CourseController.countCourseViewed);
-router.get('/rating/:id', UserAuthenciation, validate(CourseValidation.getCourseRating), CourseController.getCourseRating);
+router.get('/rating/:id', validate(CourseValidation.getCourseRating), CourseController.getCourseRating);
 router.post('/rating', UserAuthenciation, validate(CourseValidation.addCourseRating), CourseController.addCourseRating);
 
 // ======================= LESSON REALATE ROUTES ===================================
 router.get('/lesson/types', CourseController.getLessonTypes);
+
+router.post('/lesson/comment', validate(CourseValidation.addLessonComment), CourseController.addLessonComment);
+router.get('/lesson/comment/:courseId/:lessonId', validate(CourseValidation.getLessonComment), CourseController.getLessonComment);
+
 router.get('/lesson/:courseId', validate(CourseValidation.getLessonList), CourseController.getLessonList);
 router.get('/lesson/:courseId/:lessonId', validate(CourseValidation.getLessonDetail), CourseController.getLesson);
 router.put('/lesson/:courseId/:lessonId', CreatorAuthenciation, validate(CourseValidation.updateLesson), CourseController.updateLesson);
 router.delete('/lesson/:courseId/:lessonId', CreatorAuthenciation, validate(CourseValidation.deleteLesson), CourseController.deleteLesson);
-
 
 
 module.exports = router;

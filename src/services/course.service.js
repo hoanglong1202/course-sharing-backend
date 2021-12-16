@@ -533,6 +533,44 @@ const addCourseRating = async (data) => {
   }
 }
 
+const addLessonComment = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const { courseId, lessonId, username, isCreator, content } = data;
+
+    let currentDate = new Date();
+    let dateString = currentDate.toISOString();
+
+    const query = `INSERT INTO tblComments (course_id, lesson_id, username, isCreator, content, timestamp)
+                  VALUES (${parseInt(courseId)}, ${parseInt(lessonId)}, N'${username}', N'${isCreator}', N'${content}', N'${dateString}')`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const getLessonComment = async (courseId, lessonId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `SELECT	C.course_id as courseId, C.username, C.lesson_id as lessonId,
+                  C.comment_id as commentId, C.content, C.timestamp, C.isCreator
+                  FROM tblComments as C
+                  WHERE course_id = ${parseInt(courseId)} AND lesson_id = ${parseInt(lessonId)}
+                  ORDER BY C.comment_id DESC`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -562,4 +600,6 @@ module.exports = {
   updateCourseFavourite,
   getCourseRating,
   addCourseRating,
+  addLessonComment,
+  getLessonComment,
 };

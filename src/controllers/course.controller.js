@@ -1,5 +1,5 @@
-const { CourseService, UserService } = require('../services');
-const { NotFoundError, BadRequestError } = require('../helper/errors');
+const { CourseService, UserService, CreatorService } = require('../services');
+const { NotFoundError, BadRequestError, UnauthorizedError } = require('../helper/errors');
 
 const getLandingPageCourses = async (req, res, next) => {
   try {
@@ -373,6 +373,60 @@ const addCourseRating = async (req, res, next) => {
   }
 };
 
+const addLessonComment = async (req, res, next) => {
+  try {
+    const { courseId, lessonId, userId, creatorId } = req.body;
+
+    const course = await CourseService.getCourse(courseId);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    const lesson = await CourseService.getLesson(lessonId, courseId);
+    if (!lesson) {
+      throw new NotFoundError('Lesson not found!');
+    }
+
+    await CourseService.addLessonComment(req.body);
+
+    res.status(200).send({
+      success: true,
+      message: 'Comment successfullyy'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getLessonComment = async (req, res, next) => {
+  try {
+    const { courseId, lessonId } = req.params;
+
+    const course = await CourseService.getCourse(courseId);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    const lesson = await CourseService.getLesson(lessonId, courseId);
+    if (!lesson) {
+      throw new NotFoundError('Lesson not found!');
+    }
+
+    const result = await CourseService.getLessonComment(courseId, lessonId);
+    if (!result) {
+      throw new NotFoundError('Not found!');
+    }
+
+    res.status(200).send({
+      success: true,
+      message: 'Fetching data successfullyy',
+      dataObj: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
@@ -390,4 +444,6 @@ module.exports = {
   countCourseViewed,
   getCourseRating,
   addCourseRating,
+  addLessonComment,
+  getLessonComment,
 };

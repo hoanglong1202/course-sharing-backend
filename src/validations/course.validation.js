@@ -98,6 +98,23 @@ const addCourseRating = {
   }),
 };
 
+const getLessonComment = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+    lessonId: Joi.string().required(),
+  }),
+};
+
+const addLessonComment = {
+  body: Joi.object().keys({
+    courseId: Joi.number().required(),
+    lessonId: Joi.number().required(),
+    username: Joi.string().required(),
+    isCreator: Joi.string().required(),
+    content: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   getCourseDetail,
   getLessonList,
@@ -111,4 +128,6 @@ module.exports = {
   countCourseViewed,
   getCourseRating,
   addCourseRating,
+  getLessonComment,
+  addLessonComment,
 };
