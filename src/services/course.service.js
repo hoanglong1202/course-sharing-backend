@@ -99,7 +99,7 @@ const getLessonListDetail = async (courseId) => {
     let pool = await sql.connect(config.sql);
     const result = await pool.request().query(
       `SELECT L.lesson_id as id, L.lesson_name, L.content, L.description, L.lesson_types_id, C.course_id, C.course_name, 
-              C.description as course_description, CR.creator_id, CR.username, CR.description, CR.profile_picture,
+              C.description as course_description, CR.creator_id, CR.username, CR.description as creator_description, CR.profile_picture,
               LT.lesson_types_name, L.isDeleted
       FROM tblLesson as L
       JOIN tblLessonTypes as LT on LT.lesson_types_id = L.lesson_types_id
@@ -113,7 +113,7 @@ const getLessonListDetail = async (courseId) => {
     const creator = {
       creator_id: result.recordset[0].creator_id,
       creator_name: result.recordset[0].username,
-      description: result.recordset[0].description,
+      description: result.recordset[0].creator_description,
       profile_picture: result.recordset[0].profile_picture,
     };
 
