@@ -366,7 +366,7 @@ const addCourseRating = async (req, res, next) => {
 
     res.status(200).send({
       success: true,
-      message: 'Fetching data successfullyy'
+      message: 'Rating successfullyy'
     });
   } catch (error) {
     next(error);
