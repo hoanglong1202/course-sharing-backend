@@ -37,4 +37,26 @@ const getUserFavourite = {
   }),
 };
 
-module.exports = { getUser, updateUser, addUserFavourite, getUserFavourite, removeUserFavourite };
+const getUserHistoryList = {
+  params: Joi.object().keys({
+    userId: Joi.string().required(),
+  }),
+};
+
+const addUserHistory = {
+  body: Joi.object().keys({
+    courseId: Joi.number().required(),
+    lessonId: Joi.number().required(),
+    userId: Joi.number().required(),
+  }),
+};
+
+module.exports = {
+  getUser,
+  updateUser,
+  addUserFavourite,
+  getUserFavourite,
+  removeUserFavourite,
+  addUserHistory,
+  getUserHistoryList,
+};

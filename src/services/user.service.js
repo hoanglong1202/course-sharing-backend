@@ -120,6 +120,50 @@ const getUserFavourite = async (courseId, userId) => {
   }
 };
 
+const addUserHistory = async (lessonId, userId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString();
+
+    const query = `INSERT INTO tblUserHistory (lesson_id, user_id, timestamp)
+                  VALUES (${lessonId}, ${userId}, N'${currentDateString}')`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getUserHistoryList = async (userId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `SELECT UH.user_id AS userId, T.course_id, T.learned, T2.total
+                  FROM tblUserHistory AS UH
+                  JOIN (SELECT UH.user_id AS userId, C.course_id, COUNT(*) AS learned
+                      FROM tblUserHistory AS UH
+                      JOIN tblLesson AS L on L.lesson_id = UH.lesson_id
+                      JOIN tblCourses AS C on C.course_id = L.course_id
+                      GROUP BY UH.user_id, C.course_id) AS T ON T.userId = UH.user_id
+                  JOIN (SELECT C.course_id AS courseId , COUNT(*) AS total
+                      FROM tblLesson AS L
+                      JOIN tblCourses AS C on C.course_id = L.course_id
+                      GROUP BY C.course_id) AS T2 ON T2.courseId = T.course_id
+                  WHERE UH.user_id = ${parseInt(userId)}
+                  GROUP BY UH.user_id, T.course_id, T.learned, T2.total`
+
+    const result = await pool.request().query(query);
+
+    return result.recordset[0];
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   findUserByEmail,
   getUserList,
@@ -129,4 +173,6 @@ module.exports = {
   addUserFavourite,
   getUserFavourite,
   removeUserFavourite,
+  addUserHistory,
+  getUserHistoryList,
 };

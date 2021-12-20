@@ -13,12 +13,12 @@ const uploadCoverImage = uploads.fields([
 ]);
 
 // ======================= COURSE REALATE ROUTES ===================================
-router.post('/add-course', CreatorAuthenciation, uploadCoverImage, validate(CourseValidation.addCourse), CourseController.addCourse);
-router.put('/update-course', CreatorAuthenciation, uploadCoverImage, validate(CourseValidation.updateCourse), CourseController.updateCourse);
-router.delete('/delete-course/:id', CreatorAuthenciation, validate(CourseValidation.deleteCourse), CourseController.deleteCourse);
 router.get('/', CourseController.getLandingPageCourses);
 router.get('/types', CourseController.getCourseTypes);
 router.get('/search', CourseController.searchCourse);
+router.post('/add-course', CreatorAuthenciation, uploadCoverImage, validate(CourseValidation.addCourse), CourseController.addCourse);
+router.put('/update-course', CreatorAuthenciation, uploadCoverImage, validate(CourseValidation.updateCourse), CourseController.updateCourse);
+router.delete('/delete-course/:id', CreatorAuthenciation, validate(CourseValidation.deleteCourse), CourseController.deleteCourse);
 router.get('/course-list/:creatorId', CreatorAuthenciation, validate(CourseValidation.getCourseList), CourseController.getCourseList);
 router.get('/:id', validate(CourseValidation.getCourseDetail), CourseController.getCourse);
 router.get('/count-view/:id', validate(CourseValidation.countCourseViewed), CourseController.countCourseViewed);
@@ -27,10 +27,8 @@ router.post('/rating', UserAuthenciation, validate(CourseValidation.addCourseRat
 
 // ======================= LESSON REALATE ROUTES ===================================
 router.get('/lesson/types', CourseController.getLessonTypes);
-
 router.post('/lesson/comment', validate(CourseValidation.addLessonComment), CourseController.addLessonComment);
 router.get('/lesson/comment/:courseId/:lessonId', validate(CourseValidation.getLessonComment), CourseController.getLessonComment);
-
 router.get('/lesson/:courseId', validate(CourseValidation.getLessonList), CourseController.getLessonList);
 router.get('/lesson/:courseId/:lessonId', validate(CourseValidation.getLessonDetail), CourseController.getLesson);
 router.put('/lesson/:courseId/:lessonId', CreatorAuthenciation, validate(CourseValidation.updateLesson), CourseController.updateLesson);
