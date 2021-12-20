@@ -158,7 +158,7 @@ const getUserHistoryList = async (userId) => {
 
     const result = await pool.request().query(query);
 
-    return result.recordset[0];
+    return result.recordset;
   } catch (error) {
     console.log(error);
   }
