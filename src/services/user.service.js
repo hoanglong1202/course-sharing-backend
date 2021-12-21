@@ -154,11 +154,39 @@ const getUserHistoryList = async (userId) => {
                       JOIN tblCourses AS C on C.course_id = L.course_id
                       GROUP BY C.course_id) AS T2 ON T2.courseId = T.course_id
                   WHERE UH.user_id = ${parseInt(userId)}
-                  GROUP BY UH.user_id, T.course_id, T.learned, T2.total`
+                  GROUP BY UH.user_id, T.course_id, T.learned, T2.total
+                  ORDER BY T.course_id DESC`;
+
+    const lastLessonQuery = `
+                  SELECT C.course_id as courseId, UH.user_id as userId,
+                    LAST_VALUE(UH.lesson_id) OVER (PARTITION BY UH.user_id ORDER BY C.course_id) as lessonId, UH.timestamp
+                  FROM tblUserHistory as UH
+                  JOIN tblLesson as L on L.lesson_id = UH.lesson_id
+                  JOIN tblCourses as C on C.course_id = L.course_id
+                  WHERE UH.user_id = 1001 
+                  AND UH.lesson_id IN
+                  (
+                    SELECT LAST_VALUE(UH.lesson_id) OVER (PARTITION BY UH.user_id ORDER BY C.course_id) as lessonId
+                    FROM tblUserHistory as UH
+                    JOIN tblLesson as L on L.lesson_id = UH.lesson_id
+                    JOIN tblCourses as C on C.course_id = L.course_id
+                    WHERE UH.user_id = ${parseInt(userId)}
+                  )
+                  ORDER BY C.course_id DESC`;
 
     const result = await pool.request().query(query);
+    const lastLessons = await pool.request().query(lastLessonQuery);
 
-    return result.recordset;
+    const mappingData = result.recordset.map((item, index) => {
+      const currenLesson = lastLessons.recordset[index];
+      return {
+        ...item,
+        lesson: currenLesson.lessonId,
+        timestamp: currenLesson.timestamp,
+      };
+    });
+
+    return mappingData.sort((a, b) => (a.timestamp < b.timestamp) - (a.timestamp > b.timestamp));
   } catch (error) {
     console.log(error);
   }
