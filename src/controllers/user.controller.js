@@ -97,19 +97,14 @@ const removeUserFavourite = async (req, res, next) => {
 
 const getUserFavourite = async (req, res, next) => {
   try {
-    const { courseId, userId } = req.params;
+    const { userId } = req.params;
 
     const user = await UserService.findUserById(userId);
     if (!user) {
       throw new NotFoundError('User not found!');
     }
 
-    const course = await CourseService.getCourse(courseId);
-    if (!course) {
-      throw new NotFoundError('Course not found!');
-    }
-
-    const result = await UserService.getUserFavourite(courseId, userId);
+    const result = await UserService.getUserFavourite(userId);
  
     res.status(200).send({
       success: true,

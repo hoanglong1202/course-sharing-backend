@@ -32,7 +32,6 @@ const removeUserFavourite = {
 
 const getUserFavourite = {
   params: Joi.object().keys({
-    courseId: Joi.string().required(),
     userId: Joi.string().required(),
   }),
 };

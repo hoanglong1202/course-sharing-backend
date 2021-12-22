@@ -105,16 +105,18 @@ const removeUserFavourite = async (courseId, userId) => {
   }
 };
 
-const getUserFavourite = async (courseId, userId) => {
+const getUserFavourite = async (userId) => {
   try {
     let pool = await sql.connect(config.sql);
 
-    const query = `SELECT course_id as courseId, user_id as userId, timestamp from tblUserFavourite 
-                  WHERE course_id = ${parseInt(courseId)} AND user_id = ${parseInt(userId)}`
+    const query = `SELECT U.course_id as courseId, C.course_name as courseName, U.user_id as userId, U.timestamp 
+                  FROM tblUserFavourite as U
+                  JOIN tblCourses as C ON C.course_id = U.course_id
+                  WHERE user_id = ${parseInt(userId)}`
 
     const result = await pool.request().query(query);
 
-    return result.recordset[0];
+    return result.recordset;
   } catch (error) {
     console.log(error);
   }
@@ -142,7 +144,7 @@ const getUserHistoryList = async (userId) => {
   try {
     let pool = await sql.connect(config.sql);
 
-    const query = `SELECT UH.user_id AS userId, T.course_id, T.learned, T2.total
+    const query = `SELECT UH.user_id AS userId, T.course_id as courseId, T.learned, T2.total
                   FROM tblUserHistory AS UH
                   JOIN (SELECT UH.user_id AS userId, C.course_id, COUNT(*) AS learned
                       FROM tblUserHistory AS UH
@@ -158,7 +160,7 @@ const getUserHistoryList = async (userId) => {
                   ORDER BY T.course_id DESC`;
 
     const lastLessonQuery = `
-                  SELECT C.course_id as courseId, UH.user_id as userId,
+                  SELECT C.course_id as courseId, C.course_name as courseName, UH.user_id as userId,
                     LAST_VALUE(UH.lesson_id) OVER (PARTITION BY UH.user_id ORDER BY C.course_id) as lessonId, UH.timestamp
                   FROM tblUserHistory as UH
                   JOIN tblLesson as L on L.lesson_id = UH.lesson_id
@@ -180,8 +182,9 @@ const getUserHistoryList = async (userId) => {
     const mappingData = result.recordset.map((item, index) => {
       const currenLesson = lastLessons.recordset[index];
       return {
+        courseName: currenLesson.courseName,
+        lessonId: currenLesson.lessonId,
         ...item,
-        lesson: currenLesson.lessonId,
         timestamp: currenLesson.timestamp,
       };
     });
