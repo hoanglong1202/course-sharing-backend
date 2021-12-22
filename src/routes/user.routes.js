@@ -11,6 +11,7 @@ const uploadCoverImage = uploads.fields([
   { name: "cover_picture", maxCount: 1 },
 ]);
 
+// ========================= User ===============================
 router.get('/:id', validate(UserValidation.getUser), UserController.getUser);
 router.put('/update-profile', UserAuthenciation, uploadCoverImage, validate(UserValidation.updateUser), UserController.updateUser);
 router.get('/user-favourite/:courseId/:userId', UserAuthenciation, validate(UserValidation.getUserFavourite), UserController.getUserFavourite);

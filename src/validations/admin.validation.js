@@ -6,6 +6,12 @@ const removeUser = {
   }),
 };
 
+const getAdmin = {
+  params: Joi.object().keys({
+    id: Joi.string().required(),
+  }),
+};
+
 const removeCreator = {
   params: Joi.object().keys({
     id: Joi.string().required(),
@@ -56,4 +62,5 @@ module.exports = {
   removeCourseType,
   addCourseType,
   updateCourseType,
+  getAdmin,
 };

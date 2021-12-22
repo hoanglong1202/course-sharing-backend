@@ -192,6 +192,25 @@ const updateCourseType = async (req, res, next) => {
   }
 }
 
+const getAdmin = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await AdminService.findAdminById(id);
+    if (!result) {
+      throw new NotFoundError('Types not found!');
+    }
+    delete result.pass;
+    
+    res.status(200).send({
+      success: true,
+      message: 'Get Admin successfullyy',
+      dataObj: result
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   showUserList,
   removeUser,
@@ -202,4 +221,5 @@ module.exports = {
   addCourseType,
   removeCourseType,
   updateCourseType,
+  getAdmin,
 };
