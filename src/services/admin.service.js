@@ -29,4 +29,20 @@ const findAdminById = async (id) => {
   }
 };
 
-module.exports = { findAdminByEmail, findAdminById };
+const updateAdmin = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const { admin_id, email, username, profile_picture } = data;
+
+    const query = `UPDATE tblAdmin SET email = N'${email}', username = N'${username}', profile_picture = N'${profile_picture}' WHERE admin_id = ${parseInt(admin_id)}`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { findAdminByEmail, findAdminById, updateAdmin };

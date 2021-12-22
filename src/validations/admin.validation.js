@@ -54,6 +54,16 @@ const updateCourseType = {
   }),
 };
 
+const updateAdmin = {
+  body: Joi.object().keys({
+    admin_id: Joi.any().required(),
+    email: Joi.string().required(),
+    username: Joi.string().required(),
+    profile_picture: Joi.string().required(),
+    cover_picture: Joi.any(),
+  }),
+};
+
 module.exports = {
   removeUser,
   removeCreator,
@@ -63,4 +73,5 @@ module.exports = {
   addCourseType,
   updateCourseType,
   getAdmin,
+  updateAdmin,
 };

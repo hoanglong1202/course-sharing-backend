@@ -211,6 +211,27 @@ const getAdmin = async (req, res, next) => {
   }
 }
 
+
+const updateAdmin = async (req, res, next) => {
+  try {
+    const { admin_id } = req.body;
+
+    const result = await AdminService.findAdminById(admin_id);
+    if (!result) {
+      throw new NotFoundError('Admin not found!');
+    }
+
+    await AdminService.updateAdmin(req.body);
+
+    res.status(200).send({
+      success: true,
+      message: 'Update admin successfullyy',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   showUserList,
   removeUser,
@@ -222,4 +243,5 @@ module.exports = {
   removeCourseType,
   updateCourseType,
   getAdmin,
+  updateAdmin,
 };
