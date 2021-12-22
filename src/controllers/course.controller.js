@@ -427,6 +427,28 @@ const getLessonComment = async (req, res, next) => {
   }
 };
 
+const addSingleLesson = async (req, res, next) => {
+  try {
+    const { courseId } = req.body;
+
+    const course = parseInt(courseId) || null;
+
+    const result = await CourseService.getCourse(course);
+    if (!result) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    await CourseService.addLesson(req.body);
+
+    res.status(200).send({
+      success: true,
+      message: 'Update Lesson successfullyy'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
@@ -446,4 +468,5 @@ module.exports = {
   addCourseRating,
   addLessonComment,
   getLessonComment,
+  // addLesson,
 };

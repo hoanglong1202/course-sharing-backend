@@ -571,6 +571,22 @@ const getLessonComment = async (courseId, lessonId) => {
   }
 }
 
+const addSingleLesson = async (data) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    const { lesson_name, description, content, lesson_types_id, courseId } = data;
+
+    const query = `INSERT INTO tblLesson (lesson_name, description, content, lesson_types_id, course_id)
+                  VALUES (N'${lesson_name}', N'${description}', N'${content}', ${parseInt(lesson_types_id)}, ${parseInt(courseId)})`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
