@@ -115,6 +115,16 @@ const addLessonComment = {
   }),
 };
 
+const addSingleLesson = {
+  body: Joi.object().keys({
+    courseId: Joi.number().required(),
+    lesson_name: Joi.string().required(),
+    description: Joi.string().required(),
+    content: Joi.string().required(),
+    lesson_types_id: Joi.any().required(),
+  }),
+};
+
 module.exports = {
   getCourseDetail,
   getLessonList,
@@ -130,4 +140,5 @@ module.exports = {
   addCourseRating,
   getLessonComment,
   addLessonComment,
+  addSingleLesson,
 };

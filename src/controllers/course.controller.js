@@ -438,11 +438,11 @@ const addSingleLesson = async (req, res, next) => {
       throw new NotFoundError('Course not found!');
     }
 
-    await CourseService.addLesson(req.body);
+    await CourseService.addSingleLesson(req.body);
 
     res.status(200).send({
       success: true,
-      message: 'Update Lesson successfullyy'
+      message: 'Add Lesson successfullyy'
     });
   } catch (error) {
     next(error);
@@ -468,5 +468,5 @@ module.exports = {
   addCourseRating,
   addLessonComment,
   getLessonComment,
-  // addLesson,
+  addSingleLesson,
 };

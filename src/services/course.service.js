@@ -578,7 +578,7 @@ const addSingleLesson = async (data) => {
 
     const query = `INSERT INTO tblLesson (lesson_name, description, content, lesson_types_id, course_id)
                   VALUES (N'${lesson_name}', N'${description}', N'${content}', ${parseInt(lesson_types_id)}, ${parseInt(courseId)})`;
-
+    console.log(query)
     const result = await pool.request().query(query);
 
     return result.recordset;
@@ -618,4 +618,5 @@ module.exports = {
   addCourseRating,
   addLessonComment,
   getLessonComment,
+  addSingleLesson,
 };
