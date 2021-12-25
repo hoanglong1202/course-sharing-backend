@@ -24,9 +24,8 @@ app.use(cors());
 app.use(morgan('combined'));
 app.use(cookieParser());
 
-app.use(express.static(path.join(__dirname, 'public')));
 // serving static files
-// app.use(express.static('public'));
+app.use(express.static('public'));
 
 app.use('/api', routes);
 app.use(globalErrorHandler);

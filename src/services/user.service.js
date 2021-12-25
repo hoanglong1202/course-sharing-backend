@@ -109,7 +109,7 @@ const getUserFavourite = async (userId) => {
   try {
     let pool = await sql.connect(config.sql);
 
-    const query = `SELECT U.course_id as courseId, C.course_name as courseName, U.user_id as userId, U.timestamp 
+    const query = `SELECT U.course_id as courseId, C.course_name as courseName, U.user_id as userId, U.timestamp, C.cover_picture
                   FROM tblUserFavourite as U
                   JOIN tblCourses as C ON C.course_id = U.course_id
                   WHERE user_id = ${parseInt(userId)}`
@@ -160,8 +160,8 @@ const getUserHistoryList = async (userId) => {
                   ORDER BY T.course_id DESC`;
 
     const lastLessonQuery = `
-                  SELECT C.course_id as courseId, C.course_name as courseName, UH.user_id as userId,
-                    LAST_VALUE(UH.lesson_id) OVER (PARTITION BY UH.user_id ORDER BY C.course_id) as lessonId, UH.timestamp
+                  SELECT C.course_id as courseId, C.course_name as courseName, UH.user_id as userId, 
+                    LAST_VALUE(UH.lesson_id) OVER (PARTITION BY UH.user_id ORDER BY C.course_id) as lessonId, UH.timestamp, C.cover_picture
                   FROM tblUserHistory as UH
                   JOIN tblLesson as L on L.lesson_id = UH.lesson_id
                   JOIN tblCourses as C on C.course_id = L.course_id
@@ -186,6 +186,7 @@ const getUserHistoryList = async (userId) => {
         lessonId: currenLesson.lessonId,
         ...item,
         timestamp: currenLesson.timestamp,
+        cover_picture: currenLesson.cover_picture,
       };
     });
 
