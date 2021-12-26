@@ -498,7 +498,7 @@ const getCourseRating = async (id) => {
   try {
     let pool = await sql.connect(config.sql);
 
-    const query = `SELECT R.user_id as id, U.username, R.content, R.point, R.timestamp
+    const query = `SELECT R.user_id as id, U.username, U.profile_picture, R.content, R.point, R.timestamp
                   FROM tblRating as R
                   JOIN tblUser as U on U.user_id = R.user_id
                   JOIN tblCourses As C on C.course_id = R.course_id
