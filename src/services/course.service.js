@@ -598,7 +598,7 @@ const getCourseRegister = async (courseId) => {
 
     const result = await pool.request().query(query);
 
-    return result.recordset;
+    return result.recordset[0];
   } catch (error) {
     console.log(error);
   }

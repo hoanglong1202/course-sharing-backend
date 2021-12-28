@@ -82,8 +82,8 @@ const updateCreator = async (data) => {
 
     const { creator_id, email, username, profile_picture, description } = data;
 
-    const query = `UPDATE tblUser SET email = N'${email}', description = N'${description}', username = N'${username}', profile_picture = N'${profile_picture}' WHERE user_id = ${parseInt(creator_id)}`;
-
+    const query = `UPDATE tblCreator SET email = N'${email}', description = N'${description}', username = N'${username}', profile_picture = N'${profile_picture}' WHERE creator_id = ${parseInt(creator_id)}`;
+    console.log(query)
     const result = await pool.request().query(query);
 
     return result.recordset;
