@@ -12,12 +12,13 @@ const uploadCoverImage = uploads.fields([
 ]);
 
 // ========================= User ===============================
-router.get('/:id', validate(UserValidation.getUser), UserController.getUser);
 router.put('/update-profile', UserAuthenciation, uploadCoverImage, validate(UserValidation.updateUser), UserController.updateUser);
 router.get('/user-favourite/:userId', UserAuthenciation, validate(UserValidation.getUserFavourite), UserController.getUserFavourite);
 router.get('/add-user-favourite/:courseId/:userId', UserAuthenciation, validate(UserValidation.addUserFavourite), UserController.addUserFavourite);
 router.delete('/user-favourite/:courseId/:userId', UserAuthenciation, validate(UserValidation.removeUserFavourite), UserController.removeUserFavourite);
 router.post('/user-history', UserAuthenciation, validate(UserValidation.addUserHistory), UserController.addUserHistory);
 router.get('/user-history/:userId', UserAuthenciation, validate(UserValidation.getUserHistoryList), UserController.getUserHistoryList);
+router.get('/:id', validate(UserValidation.getUser), UserController.getUser);
+
 
 module.exports = router;
