@@ -587,6 +587,44 @@ const addSingleLesson = async (data) => {
   }
 }
 
+const getCourseRegister = async (courseId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `SELECT COUNT(*) as totalView
+                  FROM tblCourseRegister as U
+                  JOIN tblCourses as C ON C.course_id = U.course_id
+                  WHERE U.course_id = ${parseInt(courseId)}`
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const addCourseRegister = async (courseId, userId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const course = parseInt(courseId);
+    const user = parseInt(userId);
+
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString();
+
+    const query = `INSERT INTO tblCourseRegister (course_id, user_id, timestamp)
+                  VALUES (${course}, ${user}, N'${currentDateString}')`;
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -619,4 +657,6 @@ module.exports = {
   addLessonComment,
   getLessonComment,
   addSingleLesson,
+  getCourseRegister,
+  addCourseRegister,
 };

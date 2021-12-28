@@ -449,6 +449,48 @@ const addSingleLesson = async (req, res, next) => {
   }
 };
 
+const addCourseRegister = async (req, res, next) => {
+  try {
+    const { courseId, userId } = req.params;
+
+    const course = await CourseService.getCourse(courseId);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    await CourseService.addCourseRegister(courseId, userId);
+ 
+    res.status(200).send({
+      success: true,
+      message: 'Add Course Register successfullyy',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getCourseRegister = async (req, res, next) => {
+  try {
+    const { courseId } = req.params;
+
+    const course = await CourseService.getCourse(courseId);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    const result = await CourseService.getCourseRegister(courseId);
+ 
+    res.status(200).send({
+      success: true,
+      message: 'Get Course Register successfullyy',
+      dataObj: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 module.exports = {
   getLandingPageCourses,
   getCourse,
@@ -469,4 +511,6 @@ module.exports = {
   addLessonComment,
   getLessonComment,
   addSingleLesson,
+  addCourseRegister,
+  getCourseRegister,
 };

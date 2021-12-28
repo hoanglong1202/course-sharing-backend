@@ -33,6 +33,10 @@ router.get('/course-list/:creatorId', CreatorAuthenciation, validate(CourseValid
 router.get('/count-view/:id', validate(CourseValidation.countCourseViewed), CourseController.countCourseViewed);
 router.get('/rating/:id', validate(CourseValidation.getCourseRating), CourseController.getCourseRating);
 router.post('/rating', UserAuthenciation, validate(CourseValidation.addCourseRating), CourseController.addCourseRating);
+
+router.get('/course-register/:courseId', validate(CourseValidation.getCourseRegister), CourseController.getCourseRegister);
+router.post('/course-register/:courseId/:userId', UserAuthenciation, validate(CourseValidation.addCourseRegister), CourseController.addCourseRegister);
+
 router.get('/:id', validate(CourseValidation.getCourseDetail), CourseController.getCourse);
 
 module.exports = router;

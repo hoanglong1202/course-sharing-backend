@@ -125,6 +125,19 @@ const addSingleLesson = {
   }),
 };
 
+const getCourseRegister = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+  }),
+};
+
+const addCourseRegister = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+    userId: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   getCourseDetail,
   getLessonList,
@@ -141,4 +154,6 @@ module.exports = {
   getLessonComment,
   addLessonComment,
   addSingleLesson,
+  getCourseRegister,
+  addCourseRegister,
 };
