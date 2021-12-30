@@ -1,26 +1,29 @@
 const nodemailer = require('nodemailer');
-const { newLesson } = require('./mailTemplate');
 
-async function mailer() {
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: `${process.env.TRANSPORTER_MAIL}`,
-      pass: `${process.env.TRANSPORTER_PASS}`, 
-    },
-  });
-  
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: `Course Sharing <${process.env.TRANSPORTER_MAIL}>`, // sender address
-    to: `vdhlong1202@gmail.com`, // list of receivers
-    subject: newLesson().subject, // Subject line
-    html: newLesson().template, // html body
-  });
+async function mailer(receivers, mail) {
+  try {
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: `${process.env.TRANSPORTER_MAIL}`,
+        pass: `${process.env.TRANSPORTER_PASS}`,
+      },
+    });
 
-  console.log('Message sent: ', info.messageId);
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+      from: `Course Sharing <${process.env.TRANSPORTER_MAIL}>`, // sender address
+      to: receivers || `vdhlong1202@gmail.com`, // list of receivers
+      subject: mail.subject, // Subject line
+      html: mail.template, // html body
+    });
+
+    console.log('Message sent: ', info.messageId);
+  } catch (error) {
+    console.error;
+  }
 }
 
-mailer().catch(console.error);
+// mailer().catch(console.error);
 
 module.exports = mailer;

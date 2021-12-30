@@ -67,7 +67,7 @@ const getCourse = async (id) => {
     const result = await pool.request().query(
       `SELECT C.course_id as id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
               C.creator_id, CR.username as creator_name,  CR.profile_picture, CR.description as creator_description,
-              C.max_user, C.approved_date, C.types_id, C.isDeleted, C.point
+              C.max_user, C.approved_date, C.types_id, C.isDeleted, C.point, CR.email
       FROM tblCourses as C
       JOIN tblCreator as CR ON CR.creator_id = C.creator_id
       WHERE C.course_id = ${id}
@@ -373,7 +373,7 @@ const approveCourse = async (id) => {
 
     const result = await pool.request().query(query);
 
-    return result.recordset;
+    return `success`;
   } catch (error) {
     console.log(error.message)
   }

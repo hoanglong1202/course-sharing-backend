@@ -1,6 +1,8 @@
 const { UserService, CreatorService, AdminService, CourseService } = require('../services');
 const { NotFoundError, BadRequestError } = require('../helper/errors');
 const bcrypt = require('bcrypt');
+const { newLesson, approvedCourse } = require('../helper/mailTemplate');
+const mailer = require('../helper/mailer');
 
 const showUserList = async (req, res, next) => {
   try {
@@ -124,7 +126,12 @@ const approveCourse = async (req, res, next) => {
       throw new NotFoundError('Course not found!');
     }
 
-    await CourseService.approveCourse(id);
+    const checked = await CourseService.approveCourse(id);
+
+    if (checked === `success`) {
+      const mail = approvedCourse(course.creator_name, id);
+      await mailer(course.email, mail);
+    }
 
     res.status(200).send({
       success: true,
@@ -133,7 +140,7 @@ const approveCourse = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 const addCourseType = async (req, res, next) => {
   try {
