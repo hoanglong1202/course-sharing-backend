@@ -1,5 +1,7 @@
 const { CourseService, UserService, CreatorService } = require('../services');
 const { NotFoundError, BadRequestError, UnauthorizedError } = require('../helper/errors');
+const mailer = require('../helper/mailer');
+const { newLesson } = require('../helper/mailTemplate');
 
 const getLandingPageCourses = async (req, res, next) => {
   try {
@@ -438,11 +440,26 @@ const addSingleLesson = async (req, res, next) => {
       throw new NotFoundError('Course not found!');
     }
 
-    await CourseService.addSingleLesson(req.body);
+    const isSuccess = await CourseService.addSingleLesson(req.body);
+
+    if (isSuccess === 'success') {
+      const userList = await CourseService.getFavouriteUsersCourse(courseId);
+      const { lessonList } = await CourseService.getLessonListDetail(courseId);
+      console.log('lessonList', lessonList)
+      const lastLessonId = lessonList[lessonList.length - 1].id;
+      console.log('lastLessonId', lastLessonId)
+
+      if (userList.length > 0) {
+        const emails = userList.map((x) => x.email).join(',');
+
+        const mail = newLesson(courseId, lastLessonId);
+        await mailer(emails, mail);
+      }
+    }
 
     res.status(200).send({
       success: true,
-      message: 'Add Lesson successfullyy'
+      message: 'Add Lesson successfullyy',
     });
   } catch (error) {
     next(error);
