@@ -1,9 +1,9 @@
-const newLesson = (courseId, lessonId) => {
+const newLesson = (courseId, course_name, lessonId) => {
   const template = `
   <div style="padding: 0; color: #000000; font-family: 'Proxima Nova', sans-serif; font-weight: 400;">
     <div style="border: 1px solid #6415FF; box-sizing: border-box; border-radius: 30px; width: 850px; height: 330px; margin: 0 auto;">
       <div style=" font-style: normal; font-weight: bold; font-weight: bold; font-size: 30px; line-height: 39px;  width: 600px; margin: auto; color: #000000; padding-top: 24px; padding-bottom: 12px;">
-        Hi, khóa học bạn theo dõi đã có bài học mới
+        Hi, khóa học ${course_name} đã có bài học mới
       </div>
       <div style="width: 60px; height: 15px; background: #6415FF; border-radius: 100px; margin: 8px auto;"></div>
       <div style="font-size: 17px; line-height: 19px; text-align: center; width: 490px; margin: auto; color: #6b6464; margin-top: 34px; margin-bottom: 40px;">
@@ -16,7 +16,7 @@ const newLesson = (courseId, lessonId) => {
       </a>
     </div>
   </div>`;
-  const subject = `Có bài học mới ✔`;
+  const subject = `Khóa học ${course_name} đã bài học mới ✔`;
   return { template, subject };
 };
 

@@ -452,7 +452,7 @@ const addSingleLesson = async (req, res, next) => {
       if (userList.length > 0) {
         const emails = userList.map((x) => x.email).join(',');
 
-        const mail = newLesson(courseId, lastLessonId);
+        const mail = newLesson(courseId, result.course_name, lastLessonId);
         await mailer(emails, mail);
       }
     }
