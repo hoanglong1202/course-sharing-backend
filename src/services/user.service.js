@@ -165,7 +165,7 @@ const getUserHistoryList = async (userId) => {
                   FROM tblUserHistory as UH
                   JOIN tblLesson as L on L.lesson_id = UH.lesson_id
                   JOIN tblCourses as C on C.course_id = L.course_id
-                  WHERE UH.user_id = 1001 
+                  WHERE UH.user_id = ${parseInt(userId)} 
                   AND UH.lesson_id IN
                   (
                     SELECT LAST_VALUE(UH.lesson_id) OVER (PARTITION BY UH.user_id ORDER BY C.course_id) as lessonId
