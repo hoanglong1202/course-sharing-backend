@@ -592,12 +592,16 @@ const getCourseRegister = async (courseId) => {
 
     const query = `SELECT COUNT(*) as totalView
                   FROM tblCourseRegister as U
-                  JOIN tblCourses as C ON C.course_id = U.course_id
                   WHERE U.course_id = ${parseInt(courseId)}`
 
-    const result = await pool.request().query(query);
+    const userQuery = `SELECT U.user_id as userId
+                    FROM tblCourseRegister as U
+                    WHERE U.course_id = ${parseInt(courseId)}`
 
-    return result.recordset[0];
+    const result = await pool.request().query(query);
+    const user = await pool.request().query(userQuery);
+
+    return { ...result.recordset[0], user: user.recordset };
   } catch (error) {
     console.log(error);
   }

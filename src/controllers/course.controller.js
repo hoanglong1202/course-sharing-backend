@@ -496,7 +496,7 @@ const getCourseRegister = async (req, res, next) => {
     }
 
     const result = await CourseService.getCourseRegister(courseId);
- 
+
     res.status(200).send({
       success: true,
       message: 'Get Course Register successfullyy',
