@@ -138,6 +138,13 @@ const addCourseRegister = {
   }),
 };
 
+const getUserLessonHistory = {
+  params: Joi.object().keys({
+    courseId: Joi.string().required(),
+    userId: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   getCourseDetail,
   getLessonList,
@@ -156,4 +163,5 @@ module.exports = {
   addSingleLesson,
   getCourseRegister,
   addCourseRegister,
+  getUserLessonHistory,
 };

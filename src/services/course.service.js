@@ -646,6 +646,24 @@ const getFavouriteUsersCourse = async (courseId) => {
   }
 };
 
+const getUserLessonHistory = async (courseId, userId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `SELECT UH.lesson_id as lessonId, UH.user_id as userId
+                FROM tblUserHistory as UH
+                JOIN tblLesson as L on L.lesson_id = UH.lesson_id
+                JOIN tblCourses as C on C.course_id = L.course_id
+                WHERE UH.user_id = ${parseInt(userId)} and C.course_id = ${parseInt(courseId)}`
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -681,4 +699,5 @@ module.exports = {
   getCourseRegister,
   addCourseRegister,
   getFavouriteUsersCourse,
+  getUserLessonHistory,
 };

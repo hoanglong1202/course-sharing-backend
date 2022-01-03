@@ -507,6 +507,26 @@ const getCourseRegister = async (req, res, next) => {
   }
 };
 
+const getUserLessonHistory = async (req, res, next) => {
+  try {
+    const { courseId, userId } = req.params;
+
+    const course = await CourseService.getCourse(courseId);
+    if (!course) {
+      throw new NotFoundError('Course not found!');
+    }
+
+    const result = await CourseService.getUserLessonHistory(courseId, userId);
+
+    res.status(200).send({
+      success: true,
+      message: 'Get User Lesson History successfullyy',
+      dataObj: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   getLandingPageCourses,
@@ -530,4 +550,5 @@ module.exports = {
   addSingleLesson,
   addCourseRegister,
   getCourseRegister,
+  getUserLessonHistory,
 };

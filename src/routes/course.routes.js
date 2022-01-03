@@ -21,6 +21,7 @@ router.get('/lesson/:courseId', validate(CourseValidation.getLessonList), Course
 router.get('/lesson/:courseId/:lessonId', validate(CourseValidation.getLessonDetail), CourseController.getLesson);
 router.put('/lesson/:courseId/:lessonId', CreatorAuthenciation, validate(CourseValidation.updateLesson), CourseController.updateLesson);
 router.delete('/lesson/:courseId/:lessonId', CreatorAuthenciation, validate(CourseValidation.deleteLesson), CourseController.deleteLesson);
+router.get('/lesson-history/:courseId/:userId', UserAuthenciation, validate(CourseValidation.getUserLessonHistory), CourseController.getUserLessonHistory);
 
 // ======================= COURSE REALATE ROUTES ===================================
 router.get('/', CourseController.getLandingPageCourses);
