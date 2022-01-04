@@ -12,7 +12,7 @@ const uploadCoverImage = uploads.fields([
 ]);
 
 // ========================= Creator ===============================
-router.get('/name', CreatorAuthenciation, CreatorController.getCreatorName);
+router.get('/name', CreatorController.getCreatorName);
 router.get('/:id', CreatorAuthenciation, CreatorController.getCreator);
 router.put('/update-profile', CreatorAuthenciation, uploadCoverImage, validate(CreatorValidation.updateCreator), CreatorController.updateCreator);
 
