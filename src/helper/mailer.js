@@ -12,7 +12,7 @@ async function mailer(receivers, mail) {
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-      from: `Course Sharing <${process.env.TRANSPORTER_MAIL}>`, // sender address
+      from: `UTE Course Sharing <${process.env.TRANSPORTER_MAIL}>`, // sender address
       to: receivers || `vdhlong1202@gmail.com`, // list of receivers
       subject: mail.subject, // Subject line
       html: mail.template, // html body

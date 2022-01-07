@@ -664,6 +664,27 @@ const getUserLessonHistory = async (courseId, userId) => {
   }
 };
 
+const getCourseAnalysis = async (courseId, userId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `SELECT C.course_id as courseId, C.course_name, C.viewed, C.favourited, T2.total_lesson
+                  FROM tblCourses as C
+                  JOIN (
+                    SELECT C.course_id as courseId, count(*) as total_lesson
+                    FROM tblCourses as C
+                    JOIN tblLesson as L on L.course_id = C.course_id
+                    GROUP BY C.course_id
+                  ) as T2 ON T2.courseId = C.course_id`
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getMostFavouritedCourses,
   getMostViewedCourses,
@@ -700,4 +721,5 @@ module.exports = {
   addCourseRegister,
   getFavouriteUsersCourse,
   getUserLessonHistory,
+  getCourseAnalysis,
 };

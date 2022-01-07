@@ -26,6 +26,8 @@ router.get('/course-list', AdminAuthenciation, AdminController.getAdminCourseLis
 router.delete('/delete-course-type/:id', AdminAuthenciation, validate(AdminValidation.removeCourseType), AdminController.removeCourseType);
 router.post('/add-course-type', AdminAuthenciation, validate(AdminValidation.addCourseType), AdminController.addCourseType);
 router.put('/update-course-type', AdminAuthenciation, validate(AdminValidation.updateCourseType), AdminController.updateCourseType);
+router.get('/course-analysis', AdminAuthenciation, AdminController.getCourseAnalysis);
+router.get('/creator-analysis', AdminAuthenciation, AdminController.getCreatorAnalysis);
 
 //========================= Admin Profile ==============================
 router.get('/:id', AdminAuthenciation, validate(AdminValidation.getAdmin), AdminController.getAdmin);

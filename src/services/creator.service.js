@@ -108,6 +108,23 @@ const addCreator = async (data) => {
   }
 };
 
+const getCreatorAnalysis = async (courseId, userId) => {
+  try {
+    let pool = await sql.connect(config.sql);
+
+    const query = `SELECT C.creator_id as creatorId, CR.email, CR.username, count(*) as total_course
+                  FROM tblCourses as C
+                  JOIN tblCreator as CR ON CR.creator_id = C.creator_id
+                  GROUP BY C.creator_id, CR.email, CR.username`
+
+    const result = await pool.request().query(query);
+
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getCreatorName,
   findCreatorByEmail,
@@ -116,4 +133,5 @@ module.exports = {
   findCreatorById,
   updateCreator,
   addCreator,
+  getCreatorAnalysis,
 };

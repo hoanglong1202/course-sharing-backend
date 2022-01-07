@@ -239,6 +239,34 @@ const updateAdmin = async (req, res, next) => {
   }
 };
 
+const getCourseAnalysis = async (req, res, next) => {
+  try {
+    const result = await CourseService.getCourseAnalysis();
+
+    res.status(200).send({
+      success: true,
+      message: 'Get Course Analysis successfullyy',
+      dataObj: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getCreatorAnalysis = async (req, res, next) => {
+  try {
+    const result = await CreatorService.getCreatorAnalysis();
+
+    res.status(200).send({
+      success: true,
+      message: 'Get User Lesson History successfullyy',
+      dataObj: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   showUserList,
   removeUser,
@@ -251,4 +279,6 @@ module.exports = {
   updateCourseType,
   getAdmin,
   updateAdmin,
+  getCourseAnalysis,
+  getCreatorAnalysis,
 };
