@@ -668,8 +668,9 @@ const getCourseAnalysis = async (courseId, userId) => {
   try {
     let pool = await sql.connect(config.sql);
 
-    const query = `SELECT C.course_id as courseId, C.course_name, C.viewed, C.favourited, T2.total_lesson
+    const query = `SELECT C.course_id as id, C.course_name, CR.username as creator_name, C.viewed, C.favourited, T2.total_lesson
                   FROM tblCourses as C
+                  JOIN tblCreator as CR on CR.creator_id = C.creator_id
                   JOIN (
                     SELECT C.course_id as courseId, count(*) as total_lesson
                     FROM tblCourses as C

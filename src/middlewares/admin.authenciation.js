@@ -18,7 +18,7 @@ async function CreatorAuthenciation(req, res, next) {
     const isValidAdmin = await AdminService.findAdminByEmail(email);
 
     if (!isValidAdmin) {
-      throw new NotFoundError('Not Found user');
+      throw new UnauthorizedError('Not Found user');
     }
 
     if (role !== 'admin') {
