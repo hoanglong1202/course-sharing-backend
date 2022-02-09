@@ -23,7 +23,7 @@ const findCreatorByEmail = async (email) => {
     const result = await pool
       .request()
       .query(
-        `select creator_id as id, email, username, description, pass, role, profile_picture from tblCreator where email = '${email}'`
+        `select creator_id as id, email, username, description, pass, role, profile_picture, status from tblCreator where email = '${email}'`
       );
     return result.recordset[0];
   } catch (error) {

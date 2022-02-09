@@ -4,7 +4,7 @@ const {
   CreatorService,
   AdminService,
 } = require('../services');
-const { BadRequestError } = require('../helper/errors');
+const { BadRequestError, UnauthorizedError } = require('../helper/errors');
 const bcrypt = require('bcrypt');
 const { generateJWT } = require('../services/utils');
 
@@ -74,6 +74,10 @@ const signin = async (req, res, next) => {
         throw new BadRequestError('Password is incorrect');
       }
 
+      if (isValidUser.status === 'Bị khóa') {
+        throw new UnauthorizedError('User have been muted');
+      }
+
       user = {
         id: isValidUser.id,
         username: isValidUser.username,
@@ -90,6 +94,10 @@ const signin = async (req, res, next) => {
 
       if (!isValidPassword) {
         throw new BadRequestError('Password is incorrect');
+      }
+
+      if (isValidCreator.status === 'Bị khóa') {
+        throw new UnauthorizedError('User have been muted');
       }
 
       user = {
