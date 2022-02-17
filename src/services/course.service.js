@@ -277,7 +277,7 @@ const searchCourse = async (data) => {
       FROM tblCourses as C
       JOIN tblCreator as CR ON CR.creator_id = C.creator_id
       JOIN tblTypes as T ON T.types_id = C.types_id
-      WHERE C.course_name LIKE N'%${courseName}%' AND T.types_name LIKE N'%${courseType}%' AND CR.username LIKE N'%${creatorName}%'
+      WHERE C.course_name LIKE N'%${courseName}%' AND T.types_name LIKE N'%${courseType}%' AND CR.username LIKE N'%${creatorName}%' AND C.isDeleted = 'false' AND C.isApproved = 'true'
       GROUP BY C.course_id, C.course_name, C.description, C.detail, C.viewed, C.favourited, C.cover_picture, 
               C.creator_id, CR.username
       ORDER BY C.course_id ${orderBy || 'DESC'}`;
